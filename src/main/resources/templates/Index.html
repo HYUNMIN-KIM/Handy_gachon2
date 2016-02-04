@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="EUC-KR" />
+<title>GRAPH PAGE</title>
+
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>
+<script type="text/javascript"
+	src="http://cdn.amcharts.com/lib/3/amcharts.js"></script>
+<script type="text/javascript"
+	src="http://cdn.amcharts.com/lib/3/serial.js"></script>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
+<script type="text/javascript"
+	src="https://cdn.jsdelivr.net/jquery.corner/2.13/jquery.corner.js"></script>
+<script type="text/javascript" src="js/graphicChart.js"></script>
+<link type="text/css" rel="stylesheet" href="css/header.css" />
+<link rel="stylesheet" type="text/css"
+	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/base/jquery-ui.css" />
+<link type="text/css" rel="stylesheet" href="css/index.css" />
+
+</head>
+<body>
+
+<div th:replace="header"></div>
+
+	<div id="chartArea">
+	
+		<div id="chartdiv"></div>
+		
+		<div id="legendDiv">
+			<table>
+				<tr>
+					<td></td>
+					<td class="legendTitle">Min</td>
+					<td class="legendTitle">Max</td>
+					<td class="legendTitle">Average</td>
+				</tr>
+				<tr>
+					<td class="type legendTitle" id="tempTitle">Temperature</td>
+					<td id="tempMin"></td>
+					<td id="tempMax"></td>
+					<td id="tempAvg"></td>
+				</tr>
+				<tr>
+					<td class="type legendTitle" id="heartTitle">Heart Rate</td>
+					<td id="heartMin"></td>
+					<td id="heartMax"></td>
+					<td id="heartAvg"></td>
+				</tr>
+				<tr>
+					<td class="type legendTitle" id="stepTitle">Step</td>
+					<td id="stepMin"></td>
+					<td id="stepMax"></td>
+					<td id="stepAvg"></td>
+				</tr>
+			</table>
+		</div>
+		
+	</div>
+	
+	
+	<div id="analysisdiv">
+		전문가의 분석 의견
+		<ul>
+			<li class="analysis" id="analysis0"></li>
+			<li class="analysis" id="analysis1"></li>
+			<li class="analysis" id="analysis2"></li>
+			<li class="analysis" id="analysis3"></li>
+			<li class="analysis" id="analysis4"></li>
+			<li class="analysis" id="analysis5"></li>
+			<li class="analysis" id="analysis6"></li>
+			<li class="analysis" id="analysis7"></li>
+			<li class="analysis" id="analysis8"></li>
+		</ul>
+	</div>
+
+
+
+<script th:inline="javascript">
+	var data = new Array;
+	var ob;
+	
+	$(document).ready(function (){
+		
+		$.ajax({
+			url : '/GetWeekData',
+			type : 'GET',
+			async : true,
+			data : {
+				'userid' :  /*[[${userid}]]*/
+			},
+			success : function(data) {
+				ob = data;
+				console.log(ob);
+				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
+				resetChart();
+			}
+		});
+		
+		
+		
+		
+		
+		//전문가 분석 정보 테두리 색상
+	    for(var i=0; i<9; i++){
+	    	$("#analysis"+i).corner();
+	        if(i == 0){
+	            $("#analysis"+i).css({"border-color" : "#545454", "background-color" : "#ececec"});
+	        }else if(i < 4){
+	            $("#analysis"+i).css({"border-color" : "#009e00", "background-color" : "#e1ffe1"});
+	        }else if(i<8){
+	            $("#analysis"+i).css({"border-color" : "#ff8600", "background-color" : "#ffe7cc"});
+	        }else{
+	            $("#analysis"+i).css({"border-color" : "#770055", "background-color" : "#ffe1f6"});
+	        }
+	    }
+		
+	});
+	
+	
+//WeekPicker
+	
+	$("#header").mouseleave(function (){
+	    $('.week-picker').css("visibility", "hidden");
+	})
+	
+	
+	$("#header_date").click(function (){
+	    $('.week-picker').css("visibility", "visible");
+	    
+	    var startDate;
+	    var endDate;
+	    var selectCurrentWeek = function() {
+	        window.setTimeout(function () {
+	            $('.week-picker').find('.ui-datepicker-current-day a').addClass('ui-state-active')
+	        }, 1);
+	    }
+	    
+	    $('.week-picker').datepicker( {
+	        showOtherMonths: true,
+	        selectOtherMonths: true,
+	        onSelect: function(dateText, inst) { 
+	            var date = $(this).datepicker('getDate');
+	            startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
+	            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 6);
+	            
+	             $.ajax({
+	     			url : '/GetWeekData',
+	     			type : 'GET',
+	     			async : true,
+	     			data : {
+	     				'userid' :  /*[[${userid}]]*/,
+	     				'startDate' : $.datepicker.formatDate( 'yy/mm/dd', startDate, inst.settings )
+	     			},
+	     			success : function(data) {
+	     				ob = data;
+	     				console.log(ob);
+	     				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
+	     				resetChart();
+	     				
+	     			}
+	     		});
+	             
+	             
+	             
+	            selectCurrentWeek();
+	        },
+	        
+	        beforeShowDay: function(date) {
+	            var cssClass = '';
+	            if(date >= startDate && date <= endDate)
+	                cssClass = 'ui-datepicker-current-day';
+	            return [true, cssClass];
+	        },
+	        onChangeMonthYear: function(year, month, inst) {
+	            selectCurrentWeek();
+	        }
+	        
+	    });
+	    
+	    $('.week-picker .ui-datepicker-calendar tr').live('mousemove', function() { $(this).find('td a').addClass('ui-state-hover'); });
+	    $('.week-picker .ui-datepicker-calendar tr').live('mouseleave', function() { $(this).find('td a').removeClass('ui-state-hover'); });
+	
+	});
+	
+	
+
+	
+
+</script>
+
+
+</body>
+</html>
