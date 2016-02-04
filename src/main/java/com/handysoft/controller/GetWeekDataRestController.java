@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.handysoft.bean.GraphData;
+import com.handysoft.bean.GraphJsonConditionData;
+import com.handysoft.bean.GraphJsonData;
 import com.handysoft.model.UserInfo;
 import com.handysoft.repository.UserExtraBeanRepository;
 import com.handysoft.model.SIHMSSensingData;
@@ -37,14 +39,14 @@ public class GetWeekDataRestController {
 	
 	private float avgHeart;
 	private int count;
-	private List<GraphData> data;
+	private List<GraphJsonData> data;
 	private Calendar c;
 	
 	@RequestMapping("/GetWeekData")
-	public @ResponseBody List<GraphData> getWeekDataRest(@RequestParam(value = "userid", required = true) String userid,
+	public @ResponseBody List<GraphJsonData> getWeekDataRest(@RequestParam(value = "userid", required = true) String userid,
 			@RequestParam(value = "startDate", required = false) String startDate, Model model) {
 		
-		data = new ArrayList<GraphData>();
+		data = new ArrayList<GraphJsonData>();
 		c = Calendar.getInstance();
 		SetCalendar.set(startDate, c);
 		avgHeart = 0;
@@ -71,14 +73,21 @@ public class GetWeekDataRestController {
 			GraphData graphData 
 			= new GraphData(simpleDate, sS.findSensorList(userSeq, year, month, day));
 			
-			
-			data.add(graphData);
-			
+			GraphJsonData graphJsonData = new GraphJsonData();
+			GraphJsonConditionData graphJsonConditionData = new GraphJsonConditionData();
+			graphJsonData.setConditionData(graphJsonConditionData);
 
+			graphJsonData.setDate(simpleDate);
+			graphJsonConditionData.setSensingData(sS.findSensorList(userSeq, year, month, day));
+			
+			data.add(graphJsonData);
+
+			
+			
 			// 평균 심박수 계산을 위한 작업
-			for (int j = 0; j < data.get(i).getSensingDataList().size(); j++) {
-				if (data.get(i).getSensingDataList().get(j).getSteps() <= 75) {
-					avgHeart += data.get(i).getSensingDataList().get(j).getHeart_rate();
+			for (int j = 0; j < graphJsonConditionData.getSensingData().size(); j++) {
+				if (graphJsonConditionData.getSensingData().get(j).getSteps() <= 75) {
+					avgHeart += graphJsonConditionData.getSensingData().get(j).getHeart_rate();
 					count++;
 				}
 			}
@@ -90,8 +99,8 @@ public class GetWeekDataRestController {
 		
 		avgHeart = (float)avgHeart/count;
 		
-		
-		for(GraphData userGraphData : data){
+		/*
+		for(GraphJsonData userGraphData : data){
 			
 			//평균심박수로 구해야 하는 정보
 			userGraphData.setOtherInfo(userExtraInfo, avgHeart);
@@ -111,11 +120,10 @@ public class GetWeekDataRestController {
 						);
 			
 		}
+		*/
 		
 		
 		
-		
-		//model.addAttribute("data", data);
 
 		
 		return data;

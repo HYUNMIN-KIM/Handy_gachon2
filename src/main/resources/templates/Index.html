@@ -97,11 +97,13 @@
 			},
 			
 			success : function(data) {
-				ob = data;
+				ob = JSON.stringify(data);
 				console.log(ob);
 				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
 				$("#waiting").css("display", "none");
 				resetChart();
+				
+				
 			}
 		});
 		
@@ -163,8 +165,7 @@
 	     				'startDate' : $.datepicker.formatDate( 'yy/mm/dd', startDate, inst.settings )
 	     			},
 	     			success : function(data) {
-	     				ob = data;
-	     				console.log(ob);
+	     				ob = JSON.stringify(data);
 	     				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
 	     				$("#waiting").css("display", "none");
 	     				resetChart();
