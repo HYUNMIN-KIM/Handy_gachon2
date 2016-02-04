@@ -50,6 +50,7 @@ div{
 	border : none;
 	outline-style:none;
 	margin-left: 20px;
+	display: none;
 }
 
 #header_title{

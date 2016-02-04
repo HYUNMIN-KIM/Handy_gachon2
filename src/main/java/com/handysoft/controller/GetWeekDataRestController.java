@@ -98,31 +98,21 @@ public class GetWeekDataRestController {
 		
 		
 		avgHeart = (float)avgHeart/count;
+
 		
-		/*
-		for(GraphJsonData userGraphData : data){
+		for(GraphJsonData graphData : data){
 			
 			//평균심박수로 구해야 하는 정보
-			userGraphData.setOtherInfo(userExtraInfo, avgHeart);
+			graphData.setOtherInfo(userExtraInfo, avgHeart);
 
 			//5분마다의 평균 처리
 			List<SIHMSSensingData> list 
-				= userGraphData.sensingValueAvg(userGraphData.getSensingDataList());
-			userGraphData.getSensingDataList().clear();
-			userGraphData.getSensingDataList().addAll(list);
+				= graphData.sensingValueAvg(graphData.getConditionData().getSensingData());
 			
-			//컨디션점수환산
-			if(userGraphData.getSensingDataList().size() == 0)
-				userGraphData.getConditionCalc().setConditionPoint(0);
-			else
-				userGraphData.getConditionCalc().setConditionPoint(
-						ConditionFormat.format(userGraphData.getConditionCalc().getConditionPoint())
-						);
+			graphData.getConditionData().getSensingData().clear();
+			graphData.getConditionData().getSensingData().addAll(list);
 			
 		}
-		*/
-		
-		
 		
 
 		

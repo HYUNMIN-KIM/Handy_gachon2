@@ -8,8 +8,6 @@ public class GraphJsonConditionData {
 
 	private float tempPoint;
 	private float hrPoint;
-	private float tempDeductPoint;
-	private float hrDeductPoint;
 	private float synchroDeductPoint;
 	private float tempChangeDeductPoint;
 	private float hrChangeDeductPoint;
@@ -35,21 +33,6 @@ public class GraphJsonConditionData {
 		this.hrPoint = hrPoint;
 	}
 
-	public float getTempDeductPoint() {
-		return tempDeductPoint;
-	}
-
-	public void setTempDeductPoint(float tempDeductPoint) {
-		this.tempDeductPoint = tempDeductPoint;
-	}
-
-	public float getHrDeductPoint() {
-		return hrDeductPoint;
-	}
-
-	public void setHrDeductPoint(float hrDeductPoint) {
-		this.hrDeductPoint = hrDeductPoint;
-	}
 
 	public float getSynchroDeductPoint() {
 		return synchroDeductPoint;

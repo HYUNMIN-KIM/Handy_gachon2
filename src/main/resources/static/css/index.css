@@ -12,6 +12,7 @@
 
 #analysisdiv {
 	position: relative;
+	display:none;
 	width: 70%;
 	margin: 0 auto;
 	margin-top: 40px; 
@@ -42,6 +43,7 @@
 
 #legendDiv{
 	position: absolute;
+	display: none;
 	right : 10px;
 	top : 20px;
 	font-size: 8pt;

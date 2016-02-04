@@ -80,16 +80,13 @@
 
 
 <script th:inline="javascript">
-	var data = new Array;
-	var ob;
-	
-	$(document).ready(function (){
 
-		
+	$(document).ready(function (){
 		
 		$("#waiting").css("display", "block");
 		$.ajax({
 			url : '/GetWeekData',
+			dataType: "json",
 			type : 'GET',
 			async : true,
 			data : {
@@ -97,13 +94,11 @@
 			},
 			
 			success : function(data) {
-				ob = JSON.stringify(data);
-				console.log(ob);
 				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
 				$("#waiting").css("display", "none");
-				resetChart();
 				
-				
+				console.log(data);
+				drawChart(data);
 			}
 		});
 		
@@ -158,6 +153,7 @@
 	            $("#waiting").css("display", "block");
 	             $.ajax({
 	     			url : '/GetWeekData',
+	     			dataType: "json",
 	     			type : 'GET',
 	     			async : true,
 	     			data : {
@@ -165,10 +161,10 @@
 	     				'startDate' : $.datepicker.formatDate( 'yy/mm/dd', startDate, inst.settings )
 	     			},
 	     			success : function(data) {
-	     				ob = JSON.stringify(data);
 	     				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
 	     				$("#waiting").css("display", "none");
-	     				resetChart();
+	     				resetChart(data);
+	     				console.log(data);
 	     				
 	     			}
 	     		});
