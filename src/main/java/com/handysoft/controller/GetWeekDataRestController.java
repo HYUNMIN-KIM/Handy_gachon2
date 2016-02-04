@@ -20,6 +20,7 @@ import com.handysoft.model.SIHMSSensingData;
 import com.handysoft.model.UserExtraInfo;
 import com.handysoft.service.SensingDataService;
 import com.handysoft.service.UserDataService;
+import com.handysoft.util.ConditionFormat;
 import com.handysoft.util.SetCalendar;
 
 @RestController
@@ -91,12 +92,23 @@ public class GetWeekDataRestController {
 		
 		
 		for(GraphData userGraphData : data){
+			
+			//평균심박수로 구해야 하는 정보
 			userGraphData.setOtherInfo(userExtraInfo, avgHeart);
+
+			//5분마다의 평균 처리
 			List<SIHMSSensingData> list 
 				= userGraphData.sensingValueAvg(userGraphData.getSensingDataList());
-			
 			userGraphData.getSensingDataList().clear();
 			userGraphData.getSensingDataList().addAll(list);
+			
+			//컨디션점수환산
+			if(userGraphData.getSensingDataList().size() == 0)
+				userGraphData.getConditionCalc().setConditionPoint(0);
+			else
+				userGraphData.getConditionCalc().setConditionPoint(
+						ConditionFormat.format(userGraphData.getConditionCalc().getConditionPoint())
+						);
 			
 		}
 		
