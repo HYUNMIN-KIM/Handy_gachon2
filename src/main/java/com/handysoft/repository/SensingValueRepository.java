@@ -12,6 +12,8 @@ import com.handysoft.model.SIHMSSensingData;
 @Repository
 public interface SensingValueRepository extends JpaRepository<SIHMSSensingData, String>{
 
+	
+	//FIXME JPQL로 DATE 타입 변경이 불가능해 native query를 사용함
 	@Query(value="SELECT ROWID, REG_USER_SEQ, TO_CHAR(LOG_DT, 'yyyy-mm-dd hh24:mi:ss') as LOG_DT, YEAR, MONTH, DAY, STEPS, HEART_RATE, TEMPERATURE "
 			+ "FROM GB_SENSING_DATA "
 			+ "WHERE REG_USER_SEQ=:seq AND YEAR=:year AND MONTH=:month AND DAY=:day", nativeQuery=true)

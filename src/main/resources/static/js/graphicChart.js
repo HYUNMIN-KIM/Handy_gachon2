@@ -61,8 +61,8 @@ function drawChart(data) {
 	
 	chartSub = new AmCharts.AmSerialChart();
 	chartSub.dataProvider = charData;
-	chartSub.dataDateFormat = "HH:NN:SS";
-	chartSub.categoryField = "date";
+//	chartSub.dataDateFormat = "HH:NN:SS";
+	chartSub.categoryField = "log_date";
 	chartSub.creditsPosition = "top-left";
 	
 	
@@ -249,8 +249,7 @@ function drawChart(data) {
 						chartCursorSub.cursorColor = "#CC0000";
 						chartSub.addChartCursor(chartCursorSub);
 						chartSub.mouseWheelZoomEnabled = true;
-						clickData = event.item.dataContext;
-						chartSub.dataProvider = event.item.dataContext.sensingData;
+						chartSub.dataProvider = sensingData;
 						var contents = [ "ConditionDetail_",
 								"Temperature_", "TemperatureChange_",
 								"TemperatureRhythm_", "HeartRate_",
@@ -284,8 +283,6 @@ function drawChart(data) {
 								}
 							});
 						}
-
-						chartSub.mouseWheelZoomEnabled = true;
 
 						chartSub.validateData();
 						//chartSub.animateAgain();

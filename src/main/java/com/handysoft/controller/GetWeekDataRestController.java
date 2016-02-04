@@ -2,9 +2,7 @@ package com.handysoft.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -13,16 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.handysoft.bean.GraphData;
 import com.handysoft.bean.GraphJsonConditionData;
 import com.handysoft.bean.GraphJsonData;
-import com.handysoft.model.UserInfo;
-import com.handysoft.repository.UserExtraBeanRepository;
 import com.handysoft.model.SIHMSSensingData;
 import com.handysoft.model.UserExtraInfo;
+import com.handysoft.model.UserInfo;
+import com.handysoft.repository.UserExtraBeanRepository;
 import com.handysoft.service.SensingDataService;
 import com.handysoft.service.UserDataService;
-import com.handysoft.util.ConditionFormat;
 import com.handysoft.util.SetCalendar;
 
 @RestController
@@ -55,7 +51,7 @@ public class GetWeekDataRestController {
 		UserInfo userInfo = uS.findUserBeanByID(userid);
 		UserExtraInfo userExtraInfo = uS.findUserExtraBeanBySeq(userInfo.getUser_seq());
 		
-		//XXX 7일간의 데이터
+		// 7일간의 데이터
 		for(int i=0; i<7; i++){
 			
 			int year = c.get(Calendar.YEAR); 
@@ -64,15 +60,14 @@ public class GetWeekDataRestController {
 			int userSeq = uS.findUserBeanByID(userid).getUser_seq();
 			
 			
-			// 월 설정 - MM형식
+			// 년/월/일로 구성된 날짜만을 표기하는 문자열
 			String simpleDate = year + "/";
 			if (month < 10)
 				simpleDate += 0;
 			simpleDate += month + "/" + day;
 			
-			GraphData graphData 
-			= new GraphData(simpleDate, sS.findSensorList(userSeq, year, month, day));
 			
+			//FIXME amchart의 데이터 프로바이더 부분 수정이 불가능해 class를 추가로 사용함
 			GraphJsonData graphJsonData = new GraphJsonData();
 			GraphJsonConditionData graphJsonConditionData = new GraphJsonConditionData();
 			graphJsonData.setConditionData(graphJsonConditionData);
@@ -80,9 +75,8 @@ public class GetWeekDataRestController {
 			graphJsonData.setDate(simpleDate);
 			graphJsonConditionData.setSensingData(sS.findSensorList(userSeq, year, month, day));
 			
-			data.add(graphJsonData);
-
 			
+			data.add(graphJsonData);
 			
 			// 평균 심박수 계산을 위한 작업
 			for (int j = 0; j < graphJsonConditionData.getSensingData().size(); j++) {
@@ -108,7 +102,6 @@ public class GetWeekDataRestController {
 			//5분마다의 평균 처리
 			List<SIHMSSensingData> list 
 				= graphData.sensingValueAvg(graphData.getConditionData().getSensingData());
-			
 			graphData.getConditionData().getSensingData().clear();
 			graphData.getConditionData().getSensingData().addAll(list);
 			

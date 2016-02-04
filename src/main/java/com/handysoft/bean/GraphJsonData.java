@@ -1,7 +1,6 @@
 package com.handysoft.bean;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import com.handysoft.model.SIHMSSensingData;
@@ -43,13 +42,13 @@ public class GraphJsonData {
 	
 	
 	
-	//XXX 그래프 출력 때문에 사용
+	// 그래프에 표기되는 추가적인 정보
 	public boolean setOtherInfo(UserExtraInfo userExtraInfo, float avgHeart){
 		try{
-			
-			Calendar birth = Calendar.getInstance();  
 			//TODO 생일을 이용한 나이 설정
 			/*
+			Calendar birth = Calendar.getInstance();  
+			
 			birth.setTime(userExtraBean.getBirthDay());  
 			Calendar today = Calendar.getInstance();  
 			int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);  

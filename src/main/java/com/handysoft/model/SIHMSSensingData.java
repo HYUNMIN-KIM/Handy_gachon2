@@ -5,10 +5,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "GB_SENSING_DATA")
@@ -44,6 +43,7 @@ public class SIHMSSensingData {
 	private float temperature;
 
 
+	@JsonFormat(pattern="HH:mm:ss")
 	public Date getLog_date() {
 		return log_date;
 	}
