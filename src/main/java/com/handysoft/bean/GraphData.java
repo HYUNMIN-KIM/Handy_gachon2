@@ -28,7 +28,6 @@ public class GraphData {
 	
 	
 	
-	
 	public String getDate() {
 		return date;
 	}

@@ -84,7 +84,10 @@
 	var ob;
 	
 	$(document).ready(function (){
+
 		
+		
+		$("#waiting").css("display", "block");
 		$.ajax({
 			url : '/GetWeekData',
 			type : 'GET',
@@ -92,10 +95,12 @@
 			data : {
 				'userid' :  /*[[${userid}]]*/
 			},
+			
 			success : function(data) {
 				ob = data;
 				console.log(ob);
 				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
+				$("#waiting").css("display", "none");
 				resetChart();
 			}
 		});
@@ -147,6 +152,8 @@
 	            startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
 	            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 6);
 	            
+	            
+	            $("#waiting").css("display", "block");
 	             $.ajax({
 	     			url : '/GetWeekData',
 	     			type : 'GET',
@@ -159,6 +166,7 @@
 	     				ob = data;
 	     				console.log(ob);
 	     				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
+	     				$("#waiting").css("display", "none");
 	     				resetChart();
 	     				
 	     			}

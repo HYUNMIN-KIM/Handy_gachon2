@@ -2,7 +2,9 @@ package com.handysoft.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -86,7 +88,8 @@ public class GetWeekDataRestController {
 		
 		
 		avgHeart = (float)avgHeart/count;
-
+		
+		
 		for(GraphData userGraphData : data){
 			userGraphData.setOtherInfo(userExtraInfo, avgHeart);
 			List<SIHMSSensingData> list 
