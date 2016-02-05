@@ -2,6 +2,7 @@ package com.handysoft.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -17,8 +18,8 @@ public class UserInfo {
 	@Column(name="USER_NM")
 	private String user_num;
 
-	
-	@Column(name="USER_SEQ")
+	@GeneratedValue
+	@Column(name="USER_SEQ", nullable=false)
 	private int user_seq;
 
 
