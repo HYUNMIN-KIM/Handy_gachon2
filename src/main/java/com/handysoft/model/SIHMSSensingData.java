@@ -1,56 +1,33 @@
 package com.handysoft.model;
-
+//!! java.sql.date는 사용하면 안 됨
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
 @Table(name = "GB_SENSING_DATA")
-@JsonPropertyOrder({"logDate"})
-@JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.ALWAYS)
+@JsonPropertyOrder({ "logDate" })
+@JsonIgnoreProperties({"seq", "year", "month", "day"})
+@IdClass(SensingDataCompositeKey.class)
 public class SIHMSSensingData {
-	
-	
+
 	@Id
-	@Column(name = "ROWID")
-	private String rowID;
-	
-	@Column(name = "REG_USER_SEQ", nullable=false)
+	@Column(name = "REG_USER_SEQ", nullable = false)
 	private int seq;
 
-	@Column(name = "YEAR", nullable=false)
-	private int year;
-	
-	@Column(name = "MONTH", nullable=false)
-	private int month;
-	
-	@Column(name = "DAY", nullable=false)
-	private int day;
-	
-	//!! GMT주의
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="HH:mm:ss", timezone = "GMT+9")
-	@Column(name = "LOG_DT", nullable=true)
+	@Id
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+9")
+	@Column(name = "LOG_DT", nullable = false)
 	private Date logDate;
 
-	@Column(name = "STEPS", nullable=true)
-	private int steps;
-
-	@Column(name = "HEART_RATE", nullable=true)
-	private int heart_rate;
-
-	@Column(name = "TEMPERATURE", nullable=true)
-	private float temperature;
-
-
-	
 	public Date getLogDate() {
 		return logDate;
 	}
@@ -58,6 +35,24 @@ public class SIHMSSensingData {
 	public void setLogDate(Date log_date) {
 		this.logDate = log_date;
 	}
+
+	@Column(name = "YEAR", nullable = false)
+	private int year;
+
+	@Column(name = "MONTH", nullable = false)
+	private int month;
+
+	@Column(name = "DAY", nullable = false)
+	private int day;
+
+	@Column(name = "STEPS", nullable = true)
+	private int steps;
+
+	@Column(name = "HEART_RATE", nullable = true)
+	private int heart_rate;
+
+	@Column(name = "TEMPERATURE", nullable = true)
+	private float temperature;
 
 	public int getSteps() {
 		return steps;
@@ -83,21 +78,40 @@ public class SIHMSSensingData {
 		this.temperature = temperature;
 	}
 
-	public SIHMSSensingData(){
-		
+	public SIHMSSensingData() {
+
 	}
 
-	public SIHMSSensingData(String rowID, int seq, int year, int month, int day, Date logDate, int steps,
-			int heart_rate, float temperature) {
-		super();
-		this.rowID = rowID;
-		this.seq = seq;
-		this.year = year;
-		this.month = month;
-		this.day = day;
-		this.logDate = logDate;
-		this.steps = steps;
-		this.heart_rate = heart_rate;
-		this.temperature = temperature;
+	public int getSeq() {
+		return seq;
 	}
+
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	public int getDay() {
+		return day;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+
 }
