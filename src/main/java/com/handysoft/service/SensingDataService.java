@@ -14,7 +14,7 @@ public class SensingDataService {
 	SensingValueRepository svR;
 	
 	public List<SIHMSSensingData> findSensorList(int seq, int year, int month, int day){
-		return svR.findBySeqAndYearAndMonthAndDay(seq, year, month, day);
+		return svR.findBySeqAndYearAndMonthAndDayOrderByLogDateAsc(seq, year, month, day);
 	}
 	
 }

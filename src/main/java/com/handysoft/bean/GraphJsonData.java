@@ -117,7 +117,7 @@ public class GraphJsonData {
 				for (int j = 0; j < originalList.size(); j++) {
 
 					if (cnt == 0) {
-						firstMinute = minute = originalList.get(j).getLog_date()
+						firstMinute = minute = originalList.get(j).getLogDate()
 								.getMinutes();
 						heartTotal = originalList.get(j).getHeart_rate();
 						stepTotal = originalList.get(j).getSteps();
@@ -127,18 +127,18 @@ public class GraphJsonData {
 					} else if (cnt < 4) {
 
 						// 이전 정보와 시간 차이가 2분을 넘어간경우
-						if (minute + 2 > originalList.get(j).getLog_date().getMinutes()) {
+						if (minute + 2 > originalList.get(j).getLogDate().getMinutes()) {
 							heartTotal += originalList.get(j).getHeart_rate();
 							stepTotal += originalList.get(j).getSteps();
 							temperatureTotal += originalList.get(j).getTemperature();
 							cnt++;
-							minute = originalList.get(j).getLog_date().getMinutes();
+							minute = originalList.get(j).getLogDate().getMinutes();
 
 						} else {
 							SIHMSSensingData sData = new SIHMSSensingData();
-							sData.setLog_date(originalList.get(j).getLog_date());
-							sData.getLog_date().setSeconds(0);
-							sData.getLog_date().setMinutes(firstMinute);
+							sData.setLogDate(originalList.get(j).getLogDate());
+							sData.getLogDate().setSeconds(0);
+							sData.getLogDate().setMinutes(firstMinute);
 
 							if (heartTotal != 0)
 								sData.setHeart_rate(heartTotal / cnt);
@@ -153,9 +153,9 @@ public class GraphJsonData {
 
 					} else {
 						SIHMSSensingData sData = new SIHMSSensingData();
-						sData.setLog_date(originalList.get(j).getLog_date());
-						sData.getLog_date().setSeconds(0);
-						sData.getLog_date().setMinutes(firstMinute);
+						sData.setLogDate(originalList.get(j).getLogDate());
+						sData.getLogDate().setSeconds(0);
+						sData.getLogDate().setMinutes(firstMinute);
 
 						if (heartTotal != 0)
 							sData.setHeart_rate(heartTotal / cnt);

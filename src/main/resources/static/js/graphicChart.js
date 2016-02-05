@@ -3,7 +3,7 @@ var chartSub;
 var charData;
 var temp;
 
-function drawChart(data) {
+function drawChart() {
 	document.getElementById('backbtn').style.display = 'none';
 	document.getElementById('analysisdiv').style.display = 'none';
 	$("#legendDiv").css("display", "none");
@@ -61,8 +61,8 @@ function drawChart(data) {
 	
 	chartSub = new AmCharts.AmSerialChart();
 	chartSub.dataProvider = charData;
-//	chartSub.dataDateFormat = "HH:NN:SS";
-	chartSub.categoryField = "log_date";
+	chartSub.dataDateFormat = "HH:NN:SS";
+	chartSub.categoryField = "logDate";
 	chartSub.creditsPosition = "top-left";
 	
 	
@@ -160,23 +160,22 @@ function drawChart(data) {
 	
 	chart.addListener("clickGraphItem", function(event) {
 						// 클릭한 데이터
-						clickData = event.item.dataContext.conditionData;
-						var sensingData = clickData.sensingData;
+						clickData = event.item.dataContext;
+						var sensingData = clickData.conditionData.sensingData;
 		
+						
 						// 데이터가 비었으면
 						if(typeof sensingData[0] == 'undefined' 
 							|| sensingData.length == 0){
-							
 							alert("Empty data");
-							
 							return;
 						
 						
 						
 						}else if (typeof sensingData[0] != 'undefined') { // 센싱데이터가 있을 때만
-							
 							var button = document.getElementById('backbtn');
 							document.getElementById('backbtn').style.display = 'block';
+							
 							document.getElementById('analysisdiv').style.display = 'block';
 							$("#legendDiv").css("display", "block");
 
@@ -187,10 +186,12 @@ function drawChart(data) {
 								resetChart();
 							}
 
-							
 							// 최고-최저-평균 계산
 							var sensingDataLength = sensingData.length;
-							var HighTemp = sensingData[0].temperature, LowTemp = sensingData[0].temperature, HighHeart = sensingData[0].heart_rate, LowHeart = sensingData[0].heart_rate, HighStep = sensingData[0].steps, LowStep = sensingData[0].steps, TotalTemp = 0, TotalHeart = 0, TotalStep = 0;
+							var HighTemp = sensingData[0].temperature, LowTemp = sensingData[0].temperature, 
+							HighHeart = sensingData[0].heart_rate, LowHeart = sensingData[0].heart_rate, 
+							HighStep = sensingData[0].steps, LowStep = sensingData[0].steps, 
+							TotalTemp = 0, TotalHeart = 0, TotalStep = 0;
 							
 							for (var i = 1; i < sensingDataLength; i++) {
 								// temperature
@@ -291,7 +292,7 @@ function drawChart(data) {
 					});
 	chart.write("chartdiv");
 }
-function resetChart(data) {
+function resetChart() {
 	chart.dataProvider = data;
 	chart.validateData();
 //	chart.animateAgain();

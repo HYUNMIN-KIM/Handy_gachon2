@@ -8,9 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
 @Table(name = "GB_SENSING_DATA")
+@JsonPropertyOrder({"logDate"})
+@JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.ALWAYS)
 public class SIHMSSensingData {
 	
 	
@@ -30,8 +35,10 @@ public class SIHMSSensingData {
 	@Column(name = "DAY", nullable=false)
 	private int day;
 	
+	//!! GMT주의
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="HH:mm:ss", timezone = "GMT+9")
 	@Column(name = "LOG_DT", nullable=true)
-	private Date log_date;
+	private Date logDate;
 
 	@Column(name = "STEPS", nullable=true)
 	private int steps;
@@ -43,13 +50,13 @@ public class SIHMSSensingData {
 	private float temperature;
 
 
-	@JsonFormat(pattern="HH:mm:ss")
-	public Date getLog_date() {
-		return log_date;
+	
+	public Date getLogDate() {
+		return logDate;
 	}
 
-	public void setLog_date(Date log_date) {
-		this.log_date = log_date;
+	public void setLogDate(Date log_date) {
+		this.logDate = log_date;
 	}
 
 	public int getSteps() {
@@ -80,7 +87,7 @@ public class SIHMSSensingData {
 		
 	}
 
-	public SIHMSSensingData(String rowID, int seq, int year, int month, int day, Date log_date, int steps,
+	public SIHMSSensingData(String rowID, int seq, int year, int month, int day, Date logDate, int steps,
 			int heart_rate, float temperature) {
 		super();
 		this.rowID = rowID;
@@ -88,7 +95,7 @@ public class SIHMSSensingData {
 		this.year = year;
 		this.month = month;
 		this.day = day;
-		this.log_date = log_date;
+		this.logDate = logDate;
 		this.steps = steps;
 		this.heart_rate = heart_rate;
 		this.temperature = temperature;

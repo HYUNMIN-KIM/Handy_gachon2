@@ -54,16 +54,16 @@ public class SIHMConditionCalc {
 	
 	
 	
-	public float calcPoints(List<SIHMSSensingData> raw_data_list){
+	public float calcPoints(List<SIHMSSensingData> rawData_list){
 		SIHMSSensingData currentData = null;
 		SIHMSSensingData pastData = null;
-		for(int i=0 ; i < raw_data_list.size(); i++){
-			currentData = raw_data_list.get(i);			
+		for(int i=0 ; i < rawData_list.size(); i++){
+			currentData = rawData_list.get(i);			
 			
 			float current_temp = currentData.getTemperature();
 			int current_hr = currentData.getHeart_rate();
 			int steps = currentData.getSteps();
-			Date current_log_date = currentData.getLog_date();
+			Date current_logDate = currentData.getLogDate();
 			if(steps > 75){
 				// 운동량이 거의 없는 데이터가 아닌경우 다음으로
 				// 걸음 수와 심박수의 관계에 따른 운동량이 거의 없는 상태에 대한 명확한 정의 필요
@@ -83,8 +83,8 @@ public class SIHMConditionCalc {
 			if(pastData != null){
 				float past_temp = pastData.getTemperature();
 				int past_hr = pastData.getHeart_rate();
-				Date past_log_date = pastData.getLog_date();				
-				if((current_log_date.getTime() - past_log_date.getTime())/1000 < (60*10)){ // 지난 데이터가 10분 이내의 데이터면
+				Date past_logDate = pastData.getLogDate();				
+				if((current_logDate.getTime() - past_logDate.getTime())/1000 < (60*10)){ // 지난 데이터가 10분 이내의 데이터면
 					// 싱크로
 					if(isSynchroAbnormal(past_temp, current_temp, past_hr, current_hr)){
 						abnormalSynchroCnt++;
@@ -106,9 +106,9 @@ public class SIHMConditionCalc {
 		tempPoint = (normalDataTotalCnt - tempDeductPoint) / normalDataTotalCnt * 100;
 		hrPoint = (normalDataTotalCnt - hrDeductPoint) / normalDataTotalCnt * 100;
 		
-		synchroDeductPoint = (abnormalSynchroCnt * SYNCHRO_DUDUCT_POINT) / normalDataTotalCnt * 100;
-		tempChangeDeductPoint = (abnormalTempChangeCnt * CHANGE_DUDUCT_POINT) / normalDataTotalCnt * 100;
-		hrChangeDeductPoint =  (abnormalHrChangeCnt * CHANGE_DUDUCT_POINT) / normalDataTotalCnt * 100;
+		synchroDeductPoint = (abnormalSynchroCnt * SYNCHRODUDUCT_POINT) / normalDataTotalCnt * 100;
+		tempChangeDeductPoint = (abnormalTempChangeCnt * CHANGEDUDUCT_POINT) / normalDataTotalCnt * 100;
+		hrChangeDeductPoint =  (abnormalHrChangeCnt * CHANGEDUDUCT_POINT) / normalDataTotalCnt * 100;
 		
 		tempRhythmPoint = getTEMPRhythmPoint();
 		hrRhythmPoint = getHRRhythmPoint();
@@ -203,7 +203,7 @@ public class SIHMConditionCalc {
 	 * 씽크로 점수: 온도와 맥박이 비례 변화인 경우 정상, 반비례 변화인 경우 비정상으로 감점
 	 *  - 온도는 최소 0.2도 이상, 맥박은 최소 5회 이상 변화에 대해서만 처리  
 	 */
-	static final float SYNCHRO_DUDUCT_POINT = 0.5f;
+	static final float SYNCHRODUDUCT_POINT = 0.5f;
 	static final float SYNCHRO_TEMP_THRESHOLD = 0.2f;
 	static final int SYNCHRO_HR_THRESHOLD = 5;
 	
@@ -225,7 +225,7 @@ public class SIHMConditionCalc {
 	 *  Lv1)정상 Lv2)정상-주의 Lv3)주의-경고 Lv4) 경고 초과
 	 *  에서 2단계 이상 변하는 경우 감점 
 	 */
-	public static final float CHANGE_DUDUCT_POINT = 0.5f;
+	public static final float CHANGEDUDUCT_POINT = 0.5f;
 	
 	// 변동 - 심박
 	public boolean isHRChangeAbnormal(int past, int current){

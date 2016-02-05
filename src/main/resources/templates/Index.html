@@ -80,6 +80,8 @@
 
 
 <script th:inline="javascript">
+var data;
+
 
 	$(document).ready(function (){
 		
@@ -93,12 +95,12 @@
 				'userid' :  /*[[${userid}]]*/
 			},
 			
-			success : function(data) {
+			success : function(d) {
+				data = d;
 				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
 				$("#waiting").css("display", "none");
-				
 				console.log(data);
-				drawChart(data);
+				drawChart();
 			}
 		});
 		
@@ -160,10 +162,11 @@
 	     				'userid' :  /*[[${userid}]]*/,
 	     				'startDate' : $.datepicker.formatDate( 'yy/mm/dd', startDate, inst.settings )
 	     			},
-	     			success : function(data) {
+	     			success : function(d) {
+	     				data = d;
 	     				$("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
 	     				$("#waiting").css("display", "none");
-	     				resetChart(data);
+	     				resetChart();
 	     				console.log(data);
 	     				
 	     			}
