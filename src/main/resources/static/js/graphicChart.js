@@ -48,7 +48,7 @@ function drawChart() {
 	// graph_cond
 	var graph_cond = new AmCharts.AmGraph();
 	graph_cond.type = "column";
-	graph_cond.title = "Condition";
+	graph_cond.title = "Condition grade";
 	graph_cond.lineColor = "#85C5E3";
 	graph_cond.valueField = "conditionPoint";
 	graph_cond.balloonText = "<b><span style='font-size:14px;'>[[conditionPoint]]</span></b>";
@@ -105,7 +105,7 @@ function drawChart() {
 	// graph_cal
 	var graph_cal = new AmCharts.AmGraph();
 	graph_cal.type = "line";
-	graph_cal.title = "Calorie";
+	graph_cal.title = "Consumed calorie";
 	graph_cal.lineColor = "#00CC00";
 	graph_cal.valueField = "caloriePoint";
 	graph_cal.fillAlphas = 0;

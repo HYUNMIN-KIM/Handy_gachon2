@@ -11,7 +11,7 @@ import com.handysoft.util.FloatFormat;
 public class GraphJsonData {
 	private String date;
 	private int conditionPoint;
-	private float caloriePoint;
+	private int caloriePoint;
 	private GraphJsonConditionData conditionData;
 	
 	
@@ -30,7 +30,7 @@ public class GraphJsonData {
 	public float getCaloriePoint() {
 		return caloriePoint;
 	}
-	public void setCaloriePoint(float caloriePoint) {
+	public void setCaloriePoint(int caloriePoint) {
 		this.caloriePoint = caloriePoint;
 	}
 	public GraphJsonConditionData getConditionData() {
@@ -72,7 +72,7 @@ public class GraphJsonData {
 			
 			 
 			//소모 칼로리
-			 this.caloriePoint = calorieCalc.consumedCalorie;
+			 this.caloriePoint = (int) calorieCalc.consumedCalorie;
 			 
 			//컨디션점수환산
 				if(this.conditionData.getSensingData().size() == 0)
