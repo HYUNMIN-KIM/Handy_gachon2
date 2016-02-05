@@ -144,7 +144,7 @@ function drawChart() {
 	graph_step.lineColor = "#770055";
 	graph_step.valueField = "steps";
 	graph_step.fillAlphas = 0.7;
-	graph_step.balloonText = "<b><span style='font-size:14px;'>[[step]]</span></b>";
+	graph_step.balloonText = "<b><span style='font-size:14px;'>[[steps]]</span></b>";
 	graph_step.textAlign = "left";
 	chartSub.addGraph(graph_step);
 

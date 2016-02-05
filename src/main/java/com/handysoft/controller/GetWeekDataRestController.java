@@ -16,7 +16,6 @@ import com.handysoft.bean.GraphJsonData;
 import com.handysoft.model.SIHMSSensingData;
 import com.handysoft.model.UserExtraInfo;
 import com.handysoft.model.UserInfo;
-import com.handysoft.repository.UserExtraBeanRepository;
 import com.handysoft.service.SensingDataService;
 import com.handysoft.service.UserDataService;
 import com.handysoft.util.SetCalendar;
@@ -30,8 +29,6 @@ public class GetWeekDataRestController {
 	@Autowired
 	UserDataService uS;
 	
-	@Autowired
-	UserExtraBeanRepository uxR;
 	
 	private float avgHeart;
 	private int count;
@@ -75,15 +72,18 @@ public class GetWeekDataRestController {
 			graphJsonData.setDate(simpleDate);
 			graphJsonConditionData.setSensingData(sS.findSensorList(userSeq, year, month, day));
 			
-			
 			data.add(graphJsonData);
+
+			
 			
 			// 평균 심박수 계산을 위한 작업
 			for (int j = 0; j < graphJsonConditionData.getSensingData().size(); j++) {
+				
 				if (graphJsonConditionData.getSensingData().get(j).getSteps() <= 75) {
 					avgHeart += graphJsonConditionData.getSensingData().get(j).getHeart_rate();
 					count++;
 				}
+				
 			}
 			
 			// calendar++
