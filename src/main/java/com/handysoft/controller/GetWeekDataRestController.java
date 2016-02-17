@@ -24,10 +24,10 @@ import com.handysoft.util.SetCalendar;
 public class GetWeekDataRestController {
 
 	@Autowired
-	SensingDataService sS;
+	SensingDataService sensingDataService;
 	
 	@Autowired
-	UserDataService uS;
+	UserDataService userDataService;
 	
 	
 	private float avgHeart;
@@ -45,8 +45,8 @@ public class GetWeekDataRestController {
 		avgHeart = 0;
 		count = 0;
 		
-		UserInfo userInfo = uS.findUserBeanByID(userid);
-		UserExtraInfo userExtraInfo = uS.findUserExtraBeanBySeq(userInfo.getUser_seq());
+		UserInfo userInfo = userDataService.findUserBeanByID(userid);
+		UserExtraInfo userExtraInfo = userDataService.findUserExtraBeanBySeq(userInfo.getUser_seq());
 		
 		// 7일간의 데이터
 		for(int i=0; i<7; i++){
@@ -54,7 +54,7 @@ public class GetWeekDataRestController {
 			int year = c.get(Calendar.YEAR); 
 			int month = c.get(Calendar.MONTH) + 1;
 			int day = c.get(Calendar.DAY_OF_MONTH);
-			int userSeq = uS.findUserBeanByID(userid).getUser_seq();
+			int userSeq = userDataService.findUserBeanByID(userid).getUser_seq();
 			
 			
 			// 년/월/일로 구성된 날짜만을 표기하는 문자열
@@ -70,7 +70,8 @@ public class GetWeekDataRestController {
 			graphJsonData.setConditionData(graphJsonConditionData);
 
 			graphJsonData.setDate(simpleDate);
-			graphJsonConditionData.setSensingData(sS.findSensorList(userSeq, year, month, day));
+			graphJsonConditionData.setSensingData(
+					sensingDataService.findSensorListBySeqAndYearAndMonthAndDay(userSeq, year, month, day));
 			
 			data.add(graphJsonData);
 
@@ -99,12 +100,13 @@ public class GetWeekDataRestController {
 			//평균심박수로 구해야 하는 정보
 			graphData.setOtherInfo(userExtraInfo, avgHeart);
 
+			/*
 			//5분마다의 평균 처리
 			List<SIHMSSensingData> list 
 				= graphData.sensingValueAvg(graphData.getConditionData().getSensingData());
 			graphData.getConditionData().getSensingData().clear();
 			graphData.getConditionData().getSensingData().addAll(list);
-			
+			*/
 		}
 		
 

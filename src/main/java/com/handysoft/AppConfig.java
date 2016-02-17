@@ -3,6 +3,7 @@ package com.handysoft;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.handysoft.service.ClusterValueService;
 import com.handysoft.service.SensingDataService;
 import com.handysoft.service.UserDataService;
 
@@ -17,5 +18,10 @@ public class AppConfig {
 	@Bean
 	public SensingDataService sensingDataService(){
 		return new SensingDataService();
+	}
+	
+	@Bean
+	public ClusterValueService clusterValueService(){
+		return new ClusterValueService();
 	}
 }

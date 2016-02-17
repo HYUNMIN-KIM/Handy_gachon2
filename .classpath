@@ -80,4 +80,6 @@
 	<classpathentry sourcepath="D:/workspace/gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.1.0/53b184da3b8780beff23ba6bf1aaece92ee45e6f/classmate-1.1.0-sources.jar" kind="lib" path="D:/workspace/gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.1.0/dbbd699a1486ad0f2ed6f5af6cfed66acacb9056/classmate-1.1.0.jar"/>
 	<classpathentry sourcepath="D:/workspace/gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.1.3/a69d9a62a693f391ad19d8ac19fa85a7a60cbc7c/logback-core-1.1.3-sources.jar" kind="lib" path="D:/workspace/gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.1.3/e3c02049f2dbbc764681b40094ecf0dcbc99b157/logback-core-1.1.3.jar"/>
 	<classpathentry kind="lib" path="D:/git/Handy_gachon2/lib/ojdbc14.jar"/>
+	<classpathentry kind="lib" path="D:/git/Handy_gachon2/lib/javaml-0.1.7.jar"/>
+	<classpathentry kind="lib" path="D:/git/Handy_gachon2/lib/ajt-2.11.jar"/>
 </classpath>

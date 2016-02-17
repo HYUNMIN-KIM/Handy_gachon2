@@ -106,6 +106,9 @@ public class GraphJsonData {
 	
 	
 	// 5분마다의 평균 계산 메소드
+	//FIXME 빈 경우 시간 섞임, 소수점출력
+	//TODO 이전 정보와 시간 차이가 나는 경우 입력되는 분이 이전 시간의 분인듯
+	//이전 시간하고 시간 차이가 2분 넘어가는 list에 add할때 새로운(2분이 넘어간) 시간으로 입력하게 해야함 
 			public List<SIHMSSensingData> sensingValueAvg(
 					List<SIHMSSensingData> originalList) {
 

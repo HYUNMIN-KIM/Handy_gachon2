@@ -35,7 +35,9 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('net.sourceforge.nekohtml:nekohtml:1.9.22')
 	compile('org.jsoup:jsoup:1.8.3')
-	compile files('lib/ojdbc14.jar')
+	compile files('lib/ojdbc14.jar')    
+	compile files('lib/javaml-0.1.7.jar')
+    compile files('lib/ajt-2.11.jar')
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 

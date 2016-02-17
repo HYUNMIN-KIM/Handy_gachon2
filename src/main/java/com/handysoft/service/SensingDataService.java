@@ -13,7 +13,7 @@ public class SensingDataService {
 	@Autowired
 	SensingValueRepository svR;
 	
-	public List<SIHMSSensingData> findSensorList(int seq, int year, int month, int day){
+	public List<SIHMSSensingData> findSensorListBySeqAndYearAndMonthAndDay(int seq, int year, int month, int day){
 		return svR.findBySeqAndYearAndMonthAndDayOrderByLogDateAsc(seq, year, month, day);
 	}
 	

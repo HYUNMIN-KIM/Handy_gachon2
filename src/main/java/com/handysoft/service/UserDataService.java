@@ -1,5 +1,7 @@
 package com.handysoft.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,10 @@ public class UserDataService {
 	
 	public UserExtraInfo findUserExtraBeanBySeq(int seq){
 		return uxR.findOne(seq);
+	}
+
+	public List<UserExtraInfo> findUserExtraBeanAll() {
+		return uxR.findAll();
 	}
 	
 }

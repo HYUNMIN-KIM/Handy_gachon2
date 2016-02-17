@@ -12,5 +12,4 @@ import com.handysoft.model.SensingDataCompositeKey;
 public interface SensingValueRepository extends JpaRepository<SIHMSSensingData, SensingDataCompositeKey> {
 
 	List<SIHMSSensingData> findBySeqAndYearAndMonthAndDayOrderByLogDateAsc(int seq, int year, int month, int day);
-
 }
