@@ -3,7 +3,7 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="EUC-KR" />
-<title>GRAPH PAGE</title>
+<title>Condition Graph Page</title>
 
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>
@@ -24,12 +24,19 @@
 </head>
 <body>
 
-<div th:replace="header"></div>
+	<div th:replace="header"></div>
+
+	<div id="graphController">
+		<input type="image" src="image/backButton.png" id="backbtn" width="25"
+			height="25">
+	</div>
+
+
 
 	<div id="chartArea">
-	
+
 		<div id="chartdiv"></div>
-		
+
 		<div id="legendDiv">
 			<table>
 				<tr>
@@ -58,10 +65,10 @@
 				</tr>
 			</table>
 		</div>
-		
+
 	</div>
-	
-	
+
+
 	<div id="analysisdiv">
 		전문가의 분석 의견
 		<ul>
@@ -79,11 +86,13 @@
 
 
 
-<script th:inline="javascript">
+	<script th:inline="javascript">
 var data;
 
 
 	$(document).ready(function (){
+		
+		$("#header_title").text("Condition Graph");
 		
 		$("#waiting").css("display", "block");
 		$.ajax({

@@ -11,7 +11,7 @@ public class IndexController {
 	@RequestMapping("/")
 	public String index(@RequestParam(value = "userid", required = true) String userid, Model model){
 		model.addAttribute("userid", userid);
-		return "index";
+		return "ConditionGraph";
 	}
 	
 }
