@@ -103,75 +103,60 @@ public class GraphJsonData {
 	}
 	
 	
-	
-	
-	// 5분마다의 평균 계산 메소드
-	//FIXME 빈 경우 시간 섞임, 소수점출력
-/*			public List<SIHMSSensingData> sensingValueAvg(
-					List<SIHMSSensingData> originalList) {
+	//센싱데이터가 연속적인 경우 5분단위로 평균내는것
+	public List<SIHMSSensingData> sensingValueAvg(List<SIHMSSensingData> originList){
+		int cnt =0;
+		int hour = 0, minute = 0, firstHour = 0, firstMinute = 0, heartTotal = 0, stepTotal = 0;
+		float temperatureTotal = 0;
+		
+		List<SIHMSSensingData> newList = new ArrayList<SIHMSSensingData>();
+		
+		for(int j=0; j<originList.size(); j++){
+			
+			hour = originList.get(j).getLogDate().getHours();
+			minute = originList.get(j).getLogDate().getMinutes();
+			
+			if(cnt == 0){
+				firstHour = originList.get(j).getLogDate().getHours();
+				firstMinute = originList.get(j).getLogDate().getMinutes();
+				
+				heartTotal = originList.get(j).getHeart_rate();
+				temperatureTotal = originList.get(j).getTemperature();
+				stepTotal = originList.get(j).getSteps();
+				
+				cnt++;
+				
+			}else{
+				if(cnt == 4 || 
+						(j+1 < originList.size() 
+								&& (hour*60 + minute) + 3 <  originList.get(j+1).getLogDate().getHours()*60 
+								+  originList.get(j).getLogDate().getMinutes() )  ){
+					SIHMSSensingData sData = new SIHMSSensingData();
+					sData.setLogDate(originList.get(j).getLogDate());
+					sData.getLogDate().setSeconds(0);
+					sData.getLogDate()
+					.setMinutes(originList.get(j).getLogDate().getMinutes());
 
-				int cnt = 0;
-				int minute = 0, firstMinute = 0, heartTotal = 0, stepTotal = 0;
-				float temperatureTotal = 0;
+					if (heartTotal != 0)
+						sData.setHeart_rate(heartTotal / cnt);
+					if (stepTotal != 0)
+						sData.setSteps(stepTotal / cnt);
+					if (temperatureTotal != 0)
+						sData.setTemperature(Float.parseFloat(FloatFormat.format(temperatureTotal / cnt)));
 
-				List<SIHMSSensingData> list = new ArrayList<SIHMSSensingData>();
-				for (int j = 0; j < originalList.size(); j++) {
-
-					if (cnt == 0) {
-						firstMinute = minute = originalList.get(j).getLogDate()
-								.getMinutes();
-						heartTotal = originalList.get(j).getHeart_rate();
-						stepTotal = originalList.get(j).getSteps();
-						temperatureTotal = originalList.get(j).getTemperature();
-						cnt = 1;
-
-					} else if (cnt < 4) {
-
-						// 이전 정보와 시간 차이가 2분을 넘어간경우
-						if (minute + 2 > originalList.get(j).getLogDate().getMinutes()) {
-							heartTotal += originalList.get(j).getHeart_rate();
-							stepTotal += originalList.get(j).getSteps();
-							temperatureTotal += originalList.get(j).getTemperature();
-							cnt++;
-							minute = originalList.get(j).getLogDate().getMinutes();
-
-						} else {
-							SIHMSSensingData sData = new SIHMSSensingData();
-							sData.setLogDate(originalList.get(j).getLogDate());
-							sData.getLogDate().setSeconds(0);
-							sData.getLogDate()
-							.setMinutes(originalList.get(j).getLogDate().getMinutes());
-
-							if (heartTotal != 0)
-								sData.setHeart_rate(heartTotal / cnt);
-							if (stepTotal != 0)
-								sData.setSteps(stepTotal / cnt);
-							if (temperatureTotal != 0)
-								sData.setTemperature(temperatureTotal / cnt);
-
-							list.add(sData);
-							cnt = 0;
-						}
-
-					} else {
-						SIHMSSensingData sData = new SIHMSSensingData();
-						sData.setLogDate(originalList.get(j).getLogDate());
-						sData.getLogDate().setSeconds(0);
-						sData.getLogDate().setMinutes(firstMinute);
-
-						if (heartTotal != 0)
-							sData.setHeart_rate(heartTotal / cnt);
-						if (stepTotal != 0)
-							sData.setSteps(stepTotal / cnt);
-						if (temperatureTotal != 0)
-							sData.setTemperature(Float.parseFloat(FloatFormat
-									.format(temperatureTotal / cnt)));
-
-						list.add(sData);
-						cnt = 0;
-					}
+					newList.add(sData);
+					cnt = 0;
+					
+					
+				}else{
+					stepTotal += originList.get(j).getSteps();
+					temperatureTotal += originList.get(j).getTemperature();
+					heartTotal += originList.get(j).getHeart_rate();
+					cnt++;
 				}
-				return list;
-			}*/
+			}
+		}
+		return newList;
+	}
 	
 }

@@ -81,11 +81,6 @@ public class GetWeekDataRestController {
 			// 평균 심박수 계산을 위한 작업
 			for (int j = 0; j < graphJsonConditionData.getSensingData().size(); j++) {
 				
-				//체온 두자리
-				graphJsonConditionData.getSensingData().get(j).setTemperature(
-						Float.parseFloat(FloatFormat.format(
-						graphJsonConditionData.getSensingData().get(j).getTemperature())));
-				
 				if (graphJsonConditionData.getSensingData().get(j).getSteps() <= 75) {
 					avgHeart += graphJsonConditionData.getSensingData().get(j).getHeart_rate();
 					count++;
@@ -106,13 +101,13 @@ public class GetWeekDataRestController {
 			//평균심박수로 구해야 하는 정보
 			graphData.setOtherInfo(userExtraInfo, avgHeart);
 
-			/*
+			
 			//5분마다의 평균 처리
 			List<SIHMSSensingData> list 
 				= graphData.sensingValueAvg(graphData.getConditionData().getSensingData());
 			graphData.getConditionData().getSensingData().clear();
 			graphData.getConditionData().getSensingData().addAll(list);
-			*/
+			
 		}
 		
 
