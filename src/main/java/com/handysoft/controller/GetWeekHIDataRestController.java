@@ -130,7 +130,7 @@ public class GetWeekHIDataRestController {
 				graphJsonHIData.setSi((int)data.get(2).doubleValue());
 				graphJsonHIData.setTvi((int)data.get(3).doubleValue());
 				graphJsonHIData.setPvi((int)data.get(4).doubleValue());
-				graphJsonHIData.setTvi((int)data.get(5).doubleValue());
+				graphJsonHIData.setAi((int)data.get(5).doubleValue());
 		
 		
 				c.add(Calendar.DAY_OF_MONTH, 1);
