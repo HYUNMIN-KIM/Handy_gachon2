@@ -1,110 +1,118 @@
-function chartdiv(id, fData) {
-	var barColor = 'steelblue';
+function chartdiv(id, cData) {
+	var barColor = '#448DD6';
 	function segColor(c) {
 		return {
-			low : "#807dba",
-			mid : "#e08214",
-			high : "#41ab5d"
+			A : "#807dba",
+			B : "#DF7C7F",
+			C : "#41ab5d",
+			D : "#FF7F0E",
+			E : "#BDBDBD"
 		}[c];
 	}
-
-	// compute total for each date.
-	fData.forEach(function(d) {
-		d.total = d.hi;
-//		d.total = d.freq.low + d.freq.mid + d.freq.high;
+	
+	cData.forEach(function(d) {
+		d.date = d.date;
+		d.hi = d.hi;
+		d.ti = d.ti;
 	});
-
-	// function to handle histogram.
-	function histoGram(fD) {
+	
+	function histoGram(cD) {
 		var hG = {}, hGDim = {
-			t : 60,
+			t : 5,
 			r : 0,
 			b : 30,
-			l : 0
+			l : 30
 		};
-		hGDim.w = 550 - hGDim.l - hGDim.r, hGDim.h = 300 - hGDim.t - hGDim.b;
+		hGDim.w = 450 - hGDim.l - hGDim.r, hGDim.h = 300 - hGDim.t - hGDim.b;
 
-		// create svg for histogram.
+		// svg 만들기
 		var hGsvg = d3.select(id).append("svg").attr("width",
 				hGDim.w + hGDim.l + hGDim.r).attr("height",
 				hGDim.h + hGDim.t + hGDim.b).append("g").attr("transform",
 				"translate(" + hGDim.l + "," + hGDim.t + ")");
 
-		// create function for x-axis mapping.
 		var x = d3.scale.ordinal().rangeRoundBands([ 0, hGDim.w ], 0.1).domain(
-				fD.map(function(d) {
+				cD.map(function(d) {
 					return d[0];
 				}));
 
-		// Add x-axis to the histogram svg.
+		var y = d3.scale.linear().range([ hGDim.h, 0 ]).domain(
+				[ 0, d3.max(cD, function(d) {
+					return d[1];
+				}) ]);
+		
 		hGsvg.append("g").attr("class", "x axis").attr("transform",
 				"translate(0," + hGDim.h + ")").call(
 				d3.svg.axis().scale(x).orient("bottom"));
+		
+		hGsvg.append("g").attr("class", "y axis").call(
+				d3.svg.axis().scale(y).orient("left"));
 
-		// Create function for y-axis map.
-		var y = d3.scale.linear().range([ hGDim.h, 0 ]).domain(
-				[ 0, d3.max(fD, function(d) {
-					return d[1];
-				}) ]);
+		// mouseover할 때, tip 구현
+		var tip = d3
+		.tip()
+		.attr('class', 'd3-tip')
+		.offset([ -10, 0 ])
+		.html(
+				function(d) {
+					return "<strong>HI : </strong><span style='color:red'>"
+							+ d[1] + "</span>";
+				});
+		hGsvg.call(tip);
 
-		// Create bars for histogram to contain rectangles and freq labels.
-		var bars = hGsvg.selectAll(".bar").data(fD).enter().append("g").attr(
+		// bar chart 만들기
+		var bars = hGsvg.selectAll(".bar").data(cD).enter().append("g").attr(
 				"class", "bar");
 
-		// create the rectangles.
+		// rectangle 만들기
 		bars.append("rect").attr("x", function(d) {
 			return x(d[0]);
 		}).attr("y", function(d) {
 			return y(d[1]);
 		}).attr("width", x.rangeBand()).attr("height", function(d) {
 			return hGDim.h - y(d[1]);
-		}).attr('fill', barColor).on("mouseover", mouseover)// mouseover is
-															// defined below.
-		.on("mouseout", mouseout);// mouseout is defined below.
+		}).attr('fill', barColor).on("mouseover", mouseover).on("mouseout",
+				mouseout);
+		
+		// tip 실행
+		bars.on('mouseover', tip.show).on('mouseout', tip.hide);
+		// bar graph 위에 text 구현
+//		bars.append("text").text(function(d) {
+//			return d3.format(",")(d[1])
+//		}).attr("x", function(d) {
+//			return x(d[0]) + x.rangeBand() / 2;
+//		}).attr("y", function(d) {
+//			return y(d[1]) + 20;
+//		}).attr("text-anchor", "middle");
 
-		// Create the frequency labels above the rectangles.
-		bars.append("text").text(function(d) {
-			return d3.format(",")(d[1])
-		}).attr("x", function(d) {
-			return x(d[0]) + x.rangeBand() / 2;
-		}).attr("y", function(d) {
-			return y(d[1]) - 5;
-		}).attr("text-anchor", "middle");
-
-		function mouseover(d) { // utility function to be called on mouseover.
-			// filter for selected date.
-			var st = fData.filter(function(s) {
+		// mouseover
+		function mouseover(d) {
+			var st = cData.filter(function(s) {
 				return s.date == d[0];
-			})[0], nD = d3.keys(st.freq).map(function(s) {
+			})[0], nD = d3.keys(st.cluster).map(function(s) {
 				return {
 					type : s,
-					freq : st.freq[s]
+					cluster : st.cluster[s]
 				};
 			});
 
-			// call update functions of pie-chart and legend.
 			pC.update(nD);
 			leg.update(nD);
 		}
 
-		function mouseout(d) { // utility function to be called on mouseout.
-			// reset the pie-chart and legend.
+		// mouseout
+		function mouseout(d) {
 			pC.update(tF);
 			leg.update(tF);
 		}
 
-		// create function to update the bars. This will be used by pie-chart.
 		hG.update = function(nD, color) {
-			// update the domain of the y-axis map to reflect change in
-			// frequencies.
 			y.domain([ 0, d3.max(nD, function(d) {
 				return d[1];
 			}) ]);
 
-			// Attach the new data to the bars.
 			var bars = hGsvg.selectAll(".bar").data(nD);
 
-			// transition the height and color of rectangles.
 			bars.select("rect").transition().duration(500).attr("y",
 					function(d) {
 						return y(d[1]);
@@ -112,7 +120,6 @@ function chartdiv(id, fData) {
 				return hGDim.h - y(d[1]);
 			}).attr("fill", color);
 
-			// transition the frequency labels location and change value.
 			bars.select("text").transition().duration(500).text(function(d) {
 				return d3.format(",")(d[1])
 			}).attr("y", function(d) {
@@ -122,7 +129,7 @@ function chartdiv(id, fData) {
 		return hG;
 	}
 
-	// function to handle pieChart.
+	// pieChart.
 	function pieChart(pD) {
 		var pC = {}, pieDim = {
 			w : 300,
@@ -130,20 +137,17 @@ function chartdiv(id, fData) {
 		};
 		pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
 
-		// create svg for pie chart.
+		// svg 만들기
 		var piesvg = d3.select(id).append("svg").attr("width", pieDim.w).attr(
 				"height", pieDim.h).append("g").attr("transform",
 				"translate(" + pieDim.w / 2 + "," + pieDim.h / 2 + ")");
 
-		// create function to draw the arcs of the pie slices.
 		var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
 
-		// create a function to compute the pie slice angles.
 		var pie = d3.layout.pie().sort(null).value(function(d) {
-			return d.freq;
+			return d.cluster;
 		});
 
-		// Draw the pie slices.
 		piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d",
 				arc).each(function(d) {
 			this._current = d;
@@ -151,27 +155,26 @@ function chartdiv(id, fData) {
 			return segColor(d.data.type);
 		}).on("mouseover", mouseover).on("mouseout", mouseout);
 
-		// create function to update pie-chart. This will be used by histogram.
 		pC.update = function(nD) {
 			piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
 					.attrTween("d", arcTween);
 		}
-		// Utility function to be called on mouseover a pie slice.
+
+		// mouseover
 		function mouseover(d) {
-			// call the update function of histogram with new data.
-			hG.update(fData.map(function(v) {
-				return [ v.date, v.freq[d.data.type] ];
+			hG.update(cData.map(function(v) {
+				return [ v.date, v.cluster[d.data.type] ];
 			}), segColor(d.data.type));
 		}
-		// Utility function to be called on mouseout a pie slice.
+
+		// mouseout
 		function mouseout(d) {
-			// call the update function of histogram with all data.
-			hG.update(fData.map(function(v) {
-				return [ v.date, v.total ];
+			hG.update(cData.map(function(v) {
+				return [ v.date, v.hi, v.pi ];
 			}), barColor);
 		}
-		// Animating the pie-slice requiring a custom function which specifies
-		// how the intermediate paths should be drawn.
+
+		// intermediate
 		function arcTween(a) {
 			var i = d3.interpolate(this._current, a);
 			this._current = i(0);
@@ -182,77 +185,99 @@ function chartdiv(id, fData) {
 		return pC;
 	}
 
-	// function to handle legend.
+	// legend.
 	function legend(lD) {
+		console.log(cData[0]);
+		console.log(lD[1]);
+		
 		var leg = {};
-
-		// create table for legend.
 		var legend = d3.select(id).append("table").attr('class', 'legend');
-
-		// create one row per segment.
 		var tr = legend.append("tbody").selectAll("tr").data(lD).enter()
 				.append("tr");
-
-		// create the first column for each segment.
+		
 		tr.append("td").append("svg").attr("width", '16').attr("height", '16')
 				.append("rect").attr("width", '16').attr("height", '16').attr(
 						"fill", function(d) {
 							return segColor(d.type);
 						});
 
-		// create the second column for each segment.
 		tr.append("td").text(function(d) {
 			return d.type;
 		});
-
-		// create the third column for each segment.
-		tr.append("td").attr("class", 'legendFreq').text(function(d) {
-			return d3.format(",")(d.freq);
+		
+		// 사람 총 합
+		tr.append("td").attr("class", 'lgNumOfPeople').text(function(d) {
+			return d3.format(",")(d.cluster);
 		});
-
-		// create the fourth column for each segment.
-		tr.append("td").attr("class", 'legendPerc').text(function(d) {
+		
+		// % 계산
+		tr.append("td").attr("class", 'lgPercent').text(function(d) {
 			return getLegend(d, lD);
 		});
+		
+		// Index TI
+		tr.append("td").attr("class", 'lgIndexTI').text(function(d) {
+			return "TI: " + cData[0].ti;
+		});
+		
+		// Index PI
+		tr.append("td").attr("class", 'lgIndexPI').text(function(d) {
+			return "PI: " + cData[0].pi;
+		});
+		
+		// Index SI
+		tr.append("td").attr("class", 'lgIndexSI').text(function(d) {
+			return "SI: " + cData[0].si;
+		});
 
-		// Utility function to be used to update the legend.
+		// Index TVI
+		tr.append("td").attr("class", 'lgIndexTVI').text(function(d) {
+			return "TVI: " + cData[0].tvi;
+		});
+
+		// Index PVI
+		tr.append("td").attr("class", 'lgIndexPVI').text(function(d) {
+			return "PVI: " + cData[0].pvi;
+		});
+		
+		// Index AI
+		tr.append("td").attr("class", 'lgIndexAI').text(function(d) {
+			return "AI: " + cData[0].ai;
+		});
+		
 		leg.update = function(nD) {
-			// update the data attached to the row elements.
 			var l = legend.select("tbody").selectAll("tr").data(nD);
 
-			// update the frequencies.
-			l.select(".legendFreq").text(function(d) {
-				return d3.format(",")(d.freq);
+			l.select(".lgNumOfPeople").text(function(d) {
+				return d3.format(",")(d.cluster);
 			});
 
-			// update the percentage column.
-			l.select(".legendPerc").text(function(d) {
+			l.select(".lgPercent").text(function(d) {
 				return getLegend(d, nD);
 			});
 		}
 
-		function getLegend(d, aD) { // Utility function to compute percentage.
-			return d3.format("%")(d.freq / d3.sum(aD.map(function(v) {
-				return v.freq;
+		function getLegend(d, aD) {
+			return d3.format("%")(d.cluster / d3.sum(aD.map(function(v) {
+				return v.cluster;
 			})));
 		}
 
 		return leg;
 	}
 
-	// calculate total frequency by segment for all date.
-	var tF = [ 'low', 'mid', 'high' ].map(function(d) {
+	var tF = [ 'A', 'B', 'C', 'D', 'E' ].map(function(d) {
 		return {
 			type : d,
-			freq : d3.sum(fData.map(function(t) {
-				return t.freq[d];
+			cluster : d3.sum(cData.map(function(t) {
+				return t.cluster[d];
 			}))
 		};
 	});
 
-	// calculate total frequency by date for all segment.
-	var sF = fData.map(function(d) {
-		return [ d.date, d.total ];
+	// calculate total clusteruency by date for all segment.
+	var sF = cData.map(function(d) {
+		return [ d.date, d.hi, d.ti ];
 	});
 
 	var hG = histoGram(sF), // create the histogram.
@@ -260,86 +285,118 @@ function chartdiv(id, fData) {
 	leg = legend(tF); // create the legend.
 }
 
-var freqData = [ {
-	date : '02-10',
+var clusterData = [ {
+	date : '2016/02/10',
 	hi : 5,
-	freq : {
-		low : 4786,
-		mid : 1319,
-		high : 249
+	ti : 3,
+	pi : 3,
+	si : 3,
+	tvi: 3,
+	pvi: 3,
+	ai : 3,
+	cluster : {
+		A : 2786,
+		B : 1319,
+		C : 249,
+		D : 540,
+		E : 784
 	}
 }, {
-	date : '02-11',
+	date : '2016/02/11',
 	hi : 3,
-	freq : {
-		low : 1101,
-		mid : 412,
-		high : 674
+	ti : 3,
+	pi : 3,
+	si : 3,
+	tvi: 3,
+	pvi: 3,
+	ai : 3,
+	cluster : {
+		A : 901,
+		B : 412,
+		C : 674,
+		D : 232,
+		E : 454
 	}
 }, {
-	date : '02-12',
+	date : '2016/02/12',
 	hi : 1,
-	freq : {
-		low : 932,
-		mid : 2149,
-		high : 418
+	ti : 3,
+	pi : 3,
+	si : 3,
+	tvi: 3,
+	pvi: 3,
+	ai : 3,
+	cluster : {
+		A : 932,
+		B : 2149,
+		C : 418,
+		D : 201,
+		E : 653
 	}
 }, {
-	date : '02-13',
+	date : '2016/02/13',
 	hi : 2,
-	freq : {
-		low : 832,
-		mid : 1152,
-		high : 1862
+	ti : 3,
+	pi : 3,
+	si : 3,
+	tvi: 3,
+	pvi: 3,
+	ai : 3,
+	cluster : {
+		A : 832,
+		B : 1152,
+		C : 1862,
+		D : 454,
+		E : 511
 	}
 }, {
-	date : '02-14',
+	date : '2016/02/14',
 	hi : 3,
-	freq : {
-		low : 4481,
-		mid : 3304,
-		high : 948
+	ti : 3,
+	pi : 3,
+	si : 3,
+	tvi: 3,
+	pvi: 3,
+	ai : 3,
+	cluster : {
+		A : 4481,
+		B : 3304,
+		C : 948,
+		D : 142,
+		E : 453
 	}
 }, {
-	date : '02-15',
+	date : '2016/02/15',
 	hi : 3,
-	freq : {
-		low : 1619,
-		mid : 167,
-		high : 1063
+	ti : 3,
+	pi : 3,
+	si : 3,
+	tvi: 3,
+	pvi: 3,
+	ai : 3,
+	cluster : {
+		A : 1619,
+		B : 167,
+		C : 1063,
+		D : 554,
+		E : 232
 	}
 }, {
-	date : '02-16',
+	date : '2016/02/16',
 	hi : 4,
-	freq : {
-		low : 1819,
-		mid : 247,
-		high : 1203
-	}
-}, {
-	date : '02-17',
-	hi : 2,
-	freq : {
-		low : 4498,
-		mid : 3852,
-		high : 942
-	}
-}, {
-	date : '02-18',
-	hi : 1,
-	freq : {
-		low : 797,
-		mid : 1849,
-		high : 1534
-	}
-}, {
-	date : '02-19',
-	hi : 5,
-	freq : {
-		low : 162,
-		mid : 379,
-		high : 471
+	ti : 3,
+	pi : 3,
+	si : 3,
+	tvi: 3,
+	pvi: 3,
+	ai : 3,
+	cluster : {
+		A : 1819,
+		B : 247,
+		C : 1203,
+		D : 674,
+		E : 443
 	}
 } ];
 
-chartdiv('#chartdiv', freqData);
+chartdiv('#chartdiv', clusterData);

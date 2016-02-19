@@ -1,8 +1,8 @@
 @CHARSET "EUC-KR";
 
 body {
-	width: 1060px;
-	margin: 50px auto;
+	width: 1350px;
+	margin: 50px 45px 0px 45px;
 }
 
 path {
@@ -15,6 +15,16 @@ path:hover {
 
 rect:hover {
 	fill: blue;
+}
+
+.d3-tip {
+	line-height: 1;
+	font-weight: bold;
+	margin: 0px 45px 0px 0px;
+	padding: 8px;
+	background: rgba(0, 0, 0, 0.8);
+	color: #fff;
+	border-radius: 2px;
 }
 
 .axis {
@@ -51,7 +61,7 @@ rect:hover {
 	vertical-align: bottom;
 }
 
-.legendFreq, .legendPerc {
+.lgNumOfPeople, .lgIndexTI, .lgIndexPI, .lgIndexSI, .lgIndexTVI, .lgIndexPVI, .lgIndexAI, .lgPercent {
 	align: right;
-	width: 50px;
+	width: 45px;
 }
