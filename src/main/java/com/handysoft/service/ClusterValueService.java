@@ -19,7 +19,7 @@ public class ClusterValueService {
 	}
 	
 	
-	public List<HIClusterData> findByYearAndMonthAndDay(int year, int month, int day){
+	public List<HIClusterData> findByYearAndMonthAndDayOrderByType(int year, int month, int day){
 		return cvR.findByYearAndMonthAndDay(year, month, day);
 	}
 	
