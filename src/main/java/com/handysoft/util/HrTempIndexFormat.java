@@ -1,6 +1,6 @@
 package com.handysoft.util;
 
-public class HrTempIndexForamt {
+public class HrTempIndexFormat {
 	
 	public static int format(float score)
 	{
