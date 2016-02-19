@@ -7,6 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SparseInstance;
+import net.sf.javaml.distance.AbstractDistance;
+import net.sf.javaml.distance.AngularDistance;
+import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.JaccardIndexDistance;
+
 @EnableAutoConfiguration
 @ComponentScan
 @EnableScheduling
