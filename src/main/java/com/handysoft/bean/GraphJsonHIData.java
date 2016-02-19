@@ -1,7 +1,12 @@
 package com.handysoft.bean;
 
+import java.util.List;
+
+import com.handysoft.model.HIClusterData;
+
 public class GraphJsonHIData {
 	private String date;
+	private char type;
 	private int hi;
 	private int ti;
 	private int pi;
@@ -9,7 +14,16 @@ public class GraphJsonHIData {
 	private int tvi;
 	private int pvi;
 	private int ai;
-	private GraphJsonClusterData clusterData;
+	private List<HIClusterData> clusterData;
+	
+	
+	
+	public char getType() {
+		return type;
+	}
+	public void setType(char type) {
+		this.type = type;
+	}
 	public String getDate() {
 		return date;
 	}
@@ -52,10 +66,10 @@ public class GraphJsonHIData {
 	public void setAi(int ai) {
 		this.ai = ai;
 	}
-	public GraphJsonClusterData getClusterData() {
+	public List<HIClusterData> getClusterData() {
 		return clusterData;
 	}
-	public void setClusterData(GraphJsonClusterData clusterData) {
+	public void setClusterData(List<HIClusterData> clusterData) {
 		this.clusterData = clusterData;
 	}
 	public int getPi() {

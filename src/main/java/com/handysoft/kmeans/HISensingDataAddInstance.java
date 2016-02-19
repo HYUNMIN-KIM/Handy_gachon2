@@ -63,11 +63,17 @@ public class HISensingDataAddInstance {
 
 		//점수 추가
 		Instance instance = new SparseInstance();
+		//TI
 		instance.put(0, (double) HrTempIndexFormat.format(conditionCalc.getTempPoint()));
+		//PI
 		instance.put(1, (double) HrTempIndexFormat.format(conditionCalc.getHrPoint()));
+		//SI
 		instance.put(2, (double) SyncChangeIndexFormat.format(conditionCalc.getSynchroDeductPoint()));
+		//TVI
 		instance.put(3, (double) SyncChangeIndexFormat.format(conditionCalc.getHrChangeDeductPoint()));
+		//PVI
 		instance.put(4, (double) SyncChangeIndexFormat.format(conditionCalc.getTempChangeDeductPoint()));
+		//AI
 		instance.put(5, (double) ActivityIndexFormat.format(conditionCalc.getActivityPoint()));
 
 		return instance;

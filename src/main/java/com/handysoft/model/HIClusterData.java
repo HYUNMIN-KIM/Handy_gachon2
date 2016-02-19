@@ -5,9 +5,14 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 @Entity
 @Table(name = "GB_CLUSTER_DATA")
 @IdClass(HIClusterDataCompositeKey.class)
+@JsonPropertyOrder({ "type" })
+@JsonIgnoreProperties({"hi", "year", "month", "day"})
 public class HIClusterData {
 
 	@Id
@@ -134,6 +139,8 @@ public class HIClusterData {
 
 	}
 
+	
+	
 	public double getHi() {
 		return this.ti + this.pi + this.si + this.tvi + this.pvi + this.ai;
 
