@@ -18,6 +18,7 @@ import com.handysoft.model.UserExtraInfo;
 import com.handysoft.model.UserInfo;
 import com.handysoft.service.SensingDataService;
 import com.handysoft.service.UserDataService;
+import com.handysoft.util.FloatFormat;
 import com.handysoft.util.SetCalendar;
 
 @RestController
@@ -79,6 +80,11 @@ public class GetWeekDataRestController {
 			
 			// 평균 심박수 계산을 위한 작업
 			for (int j = 0; j < graphJsonConditionData.getSensingData().size(); j++) {
+				
+				//체온 두자리
+				graphJsonConditionData.getSensingData().get(j).setTemperature(
+						Float.parseFloat(FloatFormat.format(
+						graphJsonConditionData.getSensingData().get(j).getTemperature())));
 				
 				if (graphJsonConditionData.getSensingData().get(j).getSteps() <= 75) {
 					avgHeart += graphJsonConditionData.getSensingData().get(j).getHeart_rate();

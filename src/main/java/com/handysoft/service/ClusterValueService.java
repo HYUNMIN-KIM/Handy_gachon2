@@ -14,8 +14,8 @@ public class ClusterValueService {
 	@Autowired
 	private ClusterValueRepository cvR;
 	
-	public void save(List<HIClusterData> l){
-		cvR.save(l);
+	public void saveAll(List<HIClusterData> datas){
+		cvR.save(datas);
 	}
 	
 }

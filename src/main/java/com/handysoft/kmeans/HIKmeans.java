@@ -1,14 +1,8 @@
 package com.handysoft.kmeans;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.handysoft.model.HIClusterData;
 
@@ -16,7 +10,6 @@ import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.clustering.KMeans;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.DatasetTools;
-import net.sf.javaml.tools.data.FileHandler;
 
 public class HIKmeans {
 	private static final int CLUSTER_SIZE = 5;
@@ -24,15 +17,22 @@ public class HIKmeans {
 	
 	// 이 메소드에 전체 사용자들의 HI들이 담긴 dataset과 해당 연월일을 넣으면
 	// HI로 계산한 cluster를 리턴함
-	public static List<HIClusterData> getClusters(Dataset data, int year, int month, int day) throws IOException {
+	public static List<HIClusterData> getClusters(Dataset data, int year, int month, int day){
 		
 		List<HIClusterData> hiClusterData = new ArrayList<>();
 		
 		//set
 		Clusterer clusterer = new KMeans(CLUSTER_SIZE);
 
+		System.out.println(data.size());
+		System.out.println(data.get(0));
+		System.out.println("now clustering");
+		
 		// clustering
 		Dataset[] clusters = clusterer.cluster(data);
+		
+		System.out.println("Clusters size : ");
+		System.out.println(clusters.length);
 		
 		for(Dataset dataset : clusters){
 			
@@ -59,9 +59,9 @@ public class HIKmeans {
 			@Override
 			public int compare(HIClusterData o1, HIClusterData o2) {
 				//XXX hicluster sorting algorithm
-				if(o1.getHi() > o2.getHi())
+				if(o1.getHi() < o2.getHi())
 					return 1;
-				else if(o1.getHi() < o2.getHi())
+				else if(o1.getHi() > o2.getHi())
 					return -1;
 				else
 					return 0;

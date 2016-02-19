@@ -16,7 +16,9 @@ public class HIClusterData {
 	private int month;
 	@Id
 	private int day;
+	@Id
 	private char type;
+	
 	private double ti;
 	private double pi;
 	private double si;

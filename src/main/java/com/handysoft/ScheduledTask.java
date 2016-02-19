@@ -6,7 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.handysoft.kmeans.HIKmeans;
 import com.handysoft.kmeans.HISensingDataAddInstance;
@@ -19,7 +21,6 @@ import com.handysoft.service.UserDataService;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
-import net.sf.javaml.core.Instance;
 
 @Component
 public class ScheduledTask {
@@ -34,8 +35,8 @@ public class ScheduledTask {
 	private ClusterValueService clusterValueService;
 	
 
-	//XXX 테스트하는중
-//	@Scheduled(cron = "0 0 0 * * ?") // 매일 00시
+	@Transactional
+	@Scheduled(cron = "0 0 0 * * ?") // 매일 00시
 	public void reportDayKmeans() {
 		try {
 			Dataset data = new DefaultDataset();
@@ -60,21 +61,19 @@ public class ScheduledTask {
 				seq = ux.getSeq();
 				List<SIHMSSensingData> sensingDataList 
 					= sensingDataService.findSensorListBySeqAndYearAndMonthAndDay(seq, year, month, day);
-				Instance i = HISensingDataAddInstance.run(ux, sensingDataList);
-				data.add(i);
+				data.add(HISensingDataAddInstance.run(ux, sensingDataList));
 			}
-
-			
-			
 			
 			// 위 작업으로 모든 유저의 HI 데이터가 담긴 dataset을 clustering
 			List<HIClusterData> hiClusterData 
-			= HIKmeans.getClusters(data, year, month, day);
-
+						= HIKmeans.getClusters(data, year, month, day);
 			
-			//그걸 DB에 넣음
-//			clusterValueService.save(hiClusterData);
 			
+			//DB에 넣음
+			clusterValueService.saveAll(hiClusterData);
+			
+			
+			System.out.println("Kmeans clustering complete");
 			
 		} catch (Exception e) {
 			e.printStackTrace();

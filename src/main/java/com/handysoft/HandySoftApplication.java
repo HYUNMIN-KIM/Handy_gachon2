@@ -1,7 +1,6 @@
 package com.handysoft;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,9 +9,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableAutoConfiguration
 @ComponentScan
-//@EnableScheduling
+@EnableScheduling
 @SpringBootApplication
-public class HandySoftApplication implements CommandLineRunner{
+public class HandySoftApplication{
 
 	@Autowired
 	ScheduledTask st;
@@ -22,10 +21,4 @@ public class HandySoftApplication implements CommandLineRunner{
 	}
 
 	
-	
-	//XXX 데스트하는중
-	@Override
-	public void run(String... args) throws Exception {
-		st.reportDayKmeans();
-	}
 }

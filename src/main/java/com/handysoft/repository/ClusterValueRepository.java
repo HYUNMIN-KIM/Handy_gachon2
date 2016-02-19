@@ -8,6 +8,5 @@ import com.handysoft.model.HIClusterDataCompositeKey;
 
 @Repository
 public interface ClusterValueRepository extends JpaRepository<HIClusterData, HIClusterDataCompositeKey>{
-
-
+	
 }
