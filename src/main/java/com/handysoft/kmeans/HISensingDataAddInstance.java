@@ -18,24 +18,37 @@ public class HISensingDataAddInstance {
 			UserExtraInfo userExtraInfo
 			, List<SIHMSSensingData> sensingDataList){
 
-		//TODO 나이 평균심박수계산
-		// 나이의 경우 이전 작성한 컨트롤러에 주석처리되어있는데
-		// 그걸 util클래스로 작성해서 사용하면 됨  (임시데이터는 생일이 없어서 예외처리 해야함)
-		// 평균심박수도 이전에 했던것처럼 예전 정보 일부분 가져와서 계산해야 함
+		
 		int age = 20;
+		/*
+		//TODO 생일을 이용한 나이 설정
+		if(userExtraInfo.getBirthDay() != null && userExtraInfo.getBirthDay().trim() != "" ){
+			Calendar birth = Calendar.getInstance();  
+			String[] uxBirth = userExtraInfo.getBirthDay().trim().split("-");
+			birth.set(Calendar.YEAR, Integer.parseInt(uxBirth[0]));
+			Calendar today = Calendar.getInstance();  
+			age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);  
+		}
+		*/
+		
+		
+		//FIXME 평균심박계산 
 		float sumHeart = 0;
 		int avgHeart;
 		
-		//FIXME 평균심박계산 
 		for(int i=0;i<sensingDataList.size();i++)
 		{
-			if(sensingDataList.get(i).getSteps()<75)
+			if(sensingDataList.get(i).getSteps() <= 75)
 				sumHeart = sumHeart + sensingDataList.get(i).getHeart_rate();
 		}
+		
 		if(sensingDataList.size() != 0)
 			avgHeart = (int)sumHeart/sensingDataList.size();
 		else
 			avgHeart = 70;
+		
+		
+		
 		
 
 		SIHMConditionCalc conditionCalc = new SIHMConditionCalc(
@@ -46,8 +59,6 @@ public class HISensingDataAddInstance {
 				avgHeart);
 
 		conditionCalc.calcPoints(sensingDataList);
-
-
 
 
 		//점수 추가

@@ -65,8 +65,6 @@ public class UserInfo {
 		
 	}
 	
-	//TODO 필요한 정보 추가 가능성 있음
-	
 	
 	
 }
