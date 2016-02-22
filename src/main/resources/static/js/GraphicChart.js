@@ -17,7 +17,6 @@ function drawChart() {
 	// LEGEND
 	var legend = new AmCharts.AmLegend();
 	legend.useGraphSettings = true;
-
 	chart.addLegend(legend);
 
 	// valueAxis

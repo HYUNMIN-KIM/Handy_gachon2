@@ -39,7 +39,6 @@ public class GetWeekHIDataRestController {
 	@Autowired
 	SensingDataService sensingDataService;
 
-	List<GraphJsonHIData> graphJsonHIDatas = new ArrayList<GraphJsonHIData>();
 	private Instance userData;
 	private Calendar c;
 
@@ -48,6 +47,8 @@ public class GetWeekHIDataRestController {
 			@RequestParam(value = "userid", required = true) String userid,
 			@RequestParam(value = "startDate", required = false) String startDate, Model model) {
 
+		List<GraphJsonHIData> graphJsonHIDatas = new ArrayList<GraphJsonHIData>();
+		
 		c = Calendar.getInstance();
 		SetCalendar.set(startDate, c);
 		UserInfo userInfo = userDataService.findUserBeanByID(userid);
@@ -59,7 +60,8 @@ public class GetWeekHIDataRestController {
 			int month = c.get(Calendar.MONTH) + 1;
 			int day = c.get(Calendar.DAY_OF_MONTH);
 			int userSeq = userDataService.findUserBeanByID(userid).getUser_seq();
-
+			GraphJsonHIData graphJsonData = new GraphJsonHIData();
+			
 			// 해당 유저의 센싱 데이터를 가져와서 해당 유저의 HI값을 data에 저장하기
 
 			List<SIHMSSensingData> sensingDataList = sensingDataService
@@ -70,8 +72,8 @@ public class GetWeekHIDataRestController {
 			// DB에서 cluster들을 담아옴.
 			List<HIClusterData> hiClusterData = clusterValueService.findByYearAndMonthAndDayOrderByType(year, month,
 					day);
-			if (hiClusterData.size() == 0)
-				continue;
+			if (hiClusterData.size() != 0 && sensingDataList.size() > 0)
+			{
 
 			Instance instance = new SparseInstance();
 			instance.put(0, hiClusterData.get(0).getTi());
@@ -100,30 +102,26 @@ public class GetWeekHIDataRestController {
 				if (newDistance < distance) {
 					distance = newDistance;
 					key = j;
-				}
+					}
 			}
 
-			// 결과 add
+				// 결과 add
+				graphJsonData.setTi(userData.get(0).intValue());
+				graphJsonData.setPi(userData.get(1).intValue());
+				graphJsonData.setSi(userData.get(2).intValue());
+				graphJsonData.setTvi(userData.get(3).intValue());
+				graphJsonData.setPvi(userData.get(4).intValue());
+				graphJsonData.setAi(userData.get(5).intValue());
+				graphJsonData.setType(hiClusterData.get(key).getType());
+				graphJsonData.setClusterData(hiClusterData);
+			}			
+			
 			String simpleDate = year + "/";
-			if (month < 10)
-				simpleDate += 0;
-			simpleDate += month + "/" + day;
-			
-			GraphJsonHIData graphJsonData = new GraphJsonHIData();
-			graphJsonData.setTi(userData.get(0).intValue());
-			graphJsonData.setPi(userData.get(1).intValue());
-			graphJsonData.setSi(userData.get(2).intValue());
-			graphJsonData.setTvi(userData.get(3).intValue());
-			graphJsonData.setPvi(userData.get(4).intValue());
-			graphJsonData.setAi(userData.get(5).intValue());
+				if (month < 10)
+					simpleDate += 0;
+				simpleDate += month + "/" + day;
 			graphJsonData.setDate(simpleDate);
-			graphJsonData.setType(hiClusterData.get(key).getType());
-			graphJsonData.setClusterData(hiClusterData);
-
 			graphJsonHIDatas.add(graphJsonData);
-			
-			
-			
 			
 			c.add(Calendar.DAY_OF_MONTH, 1);
 		}

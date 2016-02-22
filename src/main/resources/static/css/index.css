@@ -10,6 +10,23 @@
 	margin: 0 auto;
 }
 
+#clusterdiv {
+    position: relative;
+    width: 70%;
+    height: 375px;
+    background-color: #FFFFFF;
+    margin: 0 auto;
+}
+
+#clusterTitle{
+	position: absolute;
+	right:30px;
+	top:20px;
+	color: black;
+    font-size: 8pt;	
+}
+
+
 #analysisdiv {
 	position: relative;
 	display:none;

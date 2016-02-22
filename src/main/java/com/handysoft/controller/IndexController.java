@@ -14,4 +14,12 @@ public class IndexController {
 		return "ConditionGraph";
 	}
 	
+	
+	@RequestMapping("/cluster")
+	public String clusterIndex(@RequestParam(value = "userid", required = true) String userid, Model model){
+		model.addAttribute("userid", userid);
+		return "ClusterGraph";
+	}
+	
+	
 }

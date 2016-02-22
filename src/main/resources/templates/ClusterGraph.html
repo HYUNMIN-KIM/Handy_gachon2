@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="EUC-KR">
 <title>Cluster Graph Page</title>
@@ -8,30 +8,131 @@
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>
 <script type="text/javascript"
-	src="http://cdn.amcharts.com/lib/3/amcharts.js"></script>
-<script type="text/javascript"
-	src="http://cdn.amcharts.com/lib/3/serial.js"></script>
-<script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
 <script type="text/javascript"
 	src="https://cdn.jsdelivr.net/jquery.corner/2.13/jquery.corner.js"></script>
-<script type="text/javascript" src="js/graphicChart.js"></script>
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/pie.js"></script>
+<script type="text/javascript"
+	src="http://cdn.amcharts.com/lib/3/serial.js"></script>
 <link type="text/css" rel="stylesheet" href="css/header.css" />
+<link type="text/css" rel="stylesheet" href="css/cluster.css" />
 <link rel="stylesheet" type="text/css"
 	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/base/jquery-ui.css" />
 <link type="text/css" rel="stylesheet" href="css/index.css" />
-
+<script type="text/javascript" src="js/ClusterChart.js"></script>
 </head>
 <body>
 
 	<div th:replace="header"></div>
 
 	<script th:inline="javascript">
-$(document).ready(function (){
-        
+	var data;
+    $(document).ready(function (){
         $("#header_title").text("Cluster Graph");
+        $("#waiting").css("display", "block");
         
+        $.ajax({
+            url : '/GetWeekHIData',
+            dataType: "json",
+            type : 'GET',
+            async : true,
+            data : {
+                'userid' :  /*[[${userid}]]*/
+            },
+            
+            success : function(d) {
+            	data = d;
+            	if(typeof data[0] != 'undefined' ){
+	                $("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
+	                $("#waiting").css("display", "none");
+	                drawChart();
+                }
+            }
+            
+        });
+        
+    });
     
+
+  //WeekPicker
+      
+      $("#header").mouseleave(function (){
+          $('.week-picker').css("visibility", "hidden");
+      })
+      
+      
+      $("#header_date").click(function (){
+          $('.week-picker').css("visibility", "visible");
+          
+          var startDate;
+          var endDate;
+          var selectCurrentWeek = function() {
+              window.setTimeout(function () {
+                  $('.week-picker').find('.ui-datepicker-current-day a').addClass('ui-state-active')
+              }, 1);
+          }
+          
+          $('.week-picker').datepicker( {
+              showOtherMonths: true,
+              selectOtherMonths: true,
+              onSelect: function(dateText, inst) { 
+                  var date = $(this).datepicker('getDate');
+                  startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
+                  endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 6);
+                  
+                  $("#waiting").css("display", "block");
+                   $.ajax({
+                      url : '/GetWeekHIData',
+                      dataType: "json",
+                      type : 'GET',
+                      async : true,
+                      data : {
+                          'userid' :  /*[[${userid}]]*/,
+                          'startDate' : $.datepicker.formatDate( 'yy/mm/dd', startDate, inst.settings )
+                      },
+                      success : function(d) {
+                    	  data = d;
+                          $("#header_date").text(data[0].date + " ~ " + data[data.length-1].date);
+                          $("#waiting").css("display", "none");
+                          $("#chardiv").empty();
+                          $("#clusterdiv").empty();
+                          drawChart();
+                      }
+                  });
+                   
+                   
+                   
+                  selectCurrentWeek();
+              },
+              
+              beforeShowDay: function(date) {
+                  var cssClass = '';
+                  if(date >= startDate && date <= endDate)
+                      cssClass = 'ui-datepicker-current-day';
+                  return [true, cssClass];
+              },
+              onChangeMonthYear: function(year, month, inst) {
+                  selectCurrentWeek();
+              }
+              
+          });
+          
+          $('.week-picker .ui-datepicker-calendar tr').live('mousemove', function() { $(this).find('td a').addClass('ui-state-hover'); });
+          $('.week-picker .ui-datepicker-calendar tr').live('mouseleave', function() { $(this).find('td a').removeClass('ui-state-hover'); });
+      
+      });
+      
     </script>
+
+
+
+
+	<div id="chartdiv"></div>
+	<div id="clusterdiv">
+	<div id="clusterTitle"></div>
+	</div>
+	
+
 </body>
 </html>
