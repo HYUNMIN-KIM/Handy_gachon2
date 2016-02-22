@@ -1,3 +1,4 @@
+//TODO
 function chartdiv(id, cData) {
 	var barColor = '#448DD6';
 	function segColor(c) {
@@ -9,14 +10,14 @@ function chartdiv(id, cData) {
 			E : "#BDBDBD"
 		}[c];
 	}
-	
+
 	cData.forEach(function(d) {
 		d.date = d.date;
-		d.hi = d.hi;
+		d.type = d.type;
 		d.ti = d.ti;
 	});
-	
-	function histoGram(cD) {
+
+	function typestoGram(cD) {
 		var hG = {}, hGDim = {
 			t : 5,
 			r : 0,
@@ -40,22 +41,29 @@ function chartdiv(id, cData) {
 				[ 0, d3.max(cD, function(d) {
 					return d[1];
 				}) ]);
-		
+
 		hGsvg.append("g").attr("class", "x axis").attr("transform",
 				"translate(0," + hGDim.h + ")").call(
 				d3.svg.axis().scale(x).orient("bottom"));
-		
+
 		hGsvg.append("g").attr("class", "y axis").call(
 				d3.svg.axis().scale(y).orient("left"));
 
 		// mouseover할 때, tip 구현
-		var tip = d3
-		.tip()
-		.attr('class', 'd3-tip')
-		.offset([ -10, 0 ])
-		.html(
+		var tip = d3.tip().attr('class', 'd3-tip').offset([ -10, 0 ]).html(
 				function(d) {
-					return "<strong>HI : </strong><span style='color:red'>"
+					
+					if (d[1] == '5')
+						d[1] = 'A';
+					else if (d[1] == '4')
+						d[1] = 'B';
+					else if (d[1] == '3')
+						d[1] = 'C';
+					else if (d[1] == '2')
+						d[1] = 'D';
+					else if (d[1] == '1')
+						d[1] = 'E';
+					return "<strong>RANK : </strong><span style='color:red'>"
 							+ d[1] + "</span>";
 				});
 		hGsvg.call(tip);
@@ -73,17 +81,9 @@ function chartdiv(id, cData) {
 			return hGDim.h - y(d[1]);
 		}).attr('fill', barColor).on("mouseover", mouseover).on("mouseout",
 				mouseout);
-		
+
 		// tip 실행
-		bars.on('mouseover', tip.show).on('mouseout', tip.hide);
-		// bar graph 위에 text 구현
-//		bars.append("text").text(function(d) {
-//			return d3.format(",")(d[1])
-//		}).attr("x", function(d) {
-//			return x(d[0]) + x.rangeBand() / 2;
-//		}).attr("y", function(d) {
-//			return y(d[1]) + 20;
-//		}).attr("text-anchor", "middle");
+		bars.on('mouseover', tip.show).on('mouseout', tip.typede);
 
 		// mouseover
 		function mouseover(d) {
@@ -150,7 +150,7 @@ function chartdiv(id, cData) {
 
 		piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d",
 				arc).each(function(d) {
-			this._current = d;
+			ttypes._current = d;
 		}).style("fill", function(d) {
 			return segColor(d.data.type);
 		}).on("mouseover", mouseover).on("mouseout", mouseout);
@@ -162,22 +162,22 @@ function chartdiv(id, cData) {
 
 		// mouseover
 		function mouseover(d) {
-			hG.update(cData.map(function(v) {
-				return [ v.date, v.cluster[d.data.type] ];
-			}), segColor(d.data.type));
+			// hG.update(cData.map(function(v) {
+			// return [ v.date, v.cluster[d.data.type] ];
+			// }), segColor(d.data.type));
 		}
 
 		// mouseout
 		function mouseout(d) {
-			hG.update(cData.map(function(v) {
-				return [ v.date, v.hi, v.pi ];
-			}), barColor);
+			// hG.update(cData.map(function(v) {
+			// return [ v.date, v.type, v.pi ];
+			// }), barColor);
 		}
 
 		// intermediate
 		function arcTween(a) {
-			var i = d3.interpolate(this._current, a);
-			this._current = i(0);
+			var i = d3.interpolate(ttypes._current, a);
+			ttypes._current = i(0);
 			return function(t) {
 				return arc(i(t));
 			};
@@ -189,12 +189,12 @@ function chartdiv(id, cData) {
 	function legend(lD) {
 		console.log(cData[0]);
 		console.log(lD[1]);
-		
+
 		var leg = {};
 		var legend = d3.select(id).append("table").attr('class', 'legend');
 		var tr = legend.append("tbody").selectAll("tr").data(lD).enter()
 				.append("tr");
-		
+
 		tr.append("td").append("svg").attr("width", '16').attr("height", '16')
 				.append("rect").attr("width", '16').attr("height", '16').attr(
 						"fill", function(d) {
@@ -204,27 +204,27 @@ function chartdiv(id, cData) {
 		tr.append("td").text(function(d) {
 			return d.type;
 		});
-		
+
 		// 사람 총 합
 		tr.append("td").attr("class", 'lgNumOfPeople').text(function(d) {
 			return d3.format(",")(d.cluster);
 		});
-		
+
 		// % 계산
 		tr.append("td").attr("class", 'lgPercent').text(function(d) {
 			return getLegend(d, lD);
 		});
-		
+
 		// Index TI
 		tr.append("td").attr("class", 'lgIndexTI').text(function(d) {
 			return "TI: " + cData[0].ti;
 		});
-		
+
 		// Index PI
 		tr.append("td").attr("class", 'lgIndexPI').text(function(d) {
 			return "PI: " + cData[0].pi;
 		});
-		
+
 		// Index SI
 		tr.append("td").attr("class", 'lgIndexSI').text(function(d) {
 			return "SI: " + cData[0].si;
@@ -239,12 +239,12 @@ function chartdiv(id, cData) {
 		tr.append("td").attr("class", 'lgIndexPVI').text(function(d) {
 			return "PVI: " + cData[0].pvi;
 		});
-		
+
 		// Index AI
 		tr.append("td").attr("class", 'lgIndexAI').text(function(d) {
 			return "AI: " + cData[0].ai;
 		});
-		
+
 		leg.update = function(nD) {
 			var l = legend.select("tbody").selectAll("tr").data(nD);
 
@@ -277,22 +277,22 @@ function chartdiv(id, cData) {
 
 	// calculate total clusteruency by date for all segment.
 	var sF = cData.map(function(d) {
-		return [ d.date, d.hi, d.ti ];
+		return [ d.date, d.type, d.ti ];
 	});
 
-	var hG = histoGram(sF), // create the histogram.
+	var hG = typestoGram(sF), // create the typestogram.
 	pC = pieChart(tF), // create the pie-chart.
 	leg = legend(tF); // create the legend.
 }
 
 var clusterData = [ {
 	date : '2016/02/10',
-	hi : 5,
+	type : 5,
 	ti : 3,
 	pi : 3,
 	si : 3,
-	tvi: 3,
-	pvi: 3,
+	tvi : 3,
+	pvi : 3,
 	ai : 3,
 	cluster : {
 		A : 2786,
@@ -303,12 +303,12 @@ var clusterData = [ {
 	}
 }, {
 	date : '2016/02/11',
-	hi : 3,
+	type : 3,
 	ti : 3,
 	pi : 3,
 	si : 3,
-	tvi: 3,
-	pvi: 3,
+	tvi : 3,
+	pvi : 3,
 	ai : 3,
 	cluster : {
 		A : 901,
@@ -319,12 +319,12 @@ var clusterData = [ {
 	}
 }, {
 	date : '2016/02/12',
-	hi : 1,
+	type : 1,
 	ti : 3,
 	pi : 3,
 	si : 3,
-	tvi: 3,
-	pvi: 3,
+	tvi : 3,
+	pvi : 3,
 	ai : 3,
 	cluster : {
 		A : 932,
@@ -335,12 +335,12 @@ var clusterData = [ {
 	}
 }, {
 	date : '2016/02/13',
-	hi : 2,
+	type : 2,
 	ti : 3,
 	pi : 3,
 	si : 3,
-	tvi: 3,
-	pvi: 3,
+	tvi : 3,
+	pvi : 3,
 	ai : 3,
 	cluster : {
 		A : 832,
@@ -351,12 +351,12 @@ var clusterData = [ {
 	}
 }, {
 	date : '2016/02/14',
-	hi : 3,
+	type : 3,
 	ti : 3,
 	pi : 3,
 	si : 3,
-	tvi: 3,
-	pvi: 3,
+	tvi : 3,
+	pvi : 3,
 	ai : 3,
 	cluster : {
 		A : 4481,
@@ -367,12 +367,12 @@ var clusterData = [ {
 	}
 }, {
 	date : '2016/02/15',
-	hi : 3,
+	type : 3,
 	ti : 3,
 	pi : 3,
 	si : 3,
-	tvi: 3,
-	pvi: 3,
+	tvi : 3,
+	pvi : 3,
 	ai : 3,
 	cluster : {
 		A : 1619,
@@ -383,12 +383,12 @@ var clusterData = [ {
 	}
 }, {
 	date : '2016/02/16',
-	hi : 4,
+	type : 4,
 	ti : 3,
 	pi : 3,
 	si : 3,
-	tvi: 3,
-	pvi: 3,
+	tvi : 3,
+	pvi : 3,
 	ai : 3,
 	cluster : {
 		A : 1819,
