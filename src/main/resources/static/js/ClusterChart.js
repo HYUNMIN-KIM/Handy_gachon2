@@ -62,7 +62,7 @@ function drawChart() {
 		overData = event.item.dataContext;
 		clusterData = overData.clusterData;
 		$("#clusterdiv").empty();
-		$("#clusterTitle").text(overData.date + " cluster detail");
+		$("#clusterTitle").text(overData.date + " Cluster Detail");
 
 		if(clusterData.length != null  && typeof clusterData.length != "undefined"){
 			for(var i=0; i<clusterData.length; i++){
@@ -77,12 +77,12 @@ function drawChart() {
 		
 		var subChart = new AmCharts.AmPieChart();
 		subChart.valueField = "count";
-		subChart.titleField = "cluster detail";
+		subChart.titleField = "Cluster Detail";
 		subChart.dataProvider = clusterData;
 		subChart.colors = ["#FF6600", "#FF9E01", "#FCD202", "#F8FF01", "#B0DE09"];
 		
-		subChart.labelText = "Type [[type]] : [[percents]]%";
-		subChart.balloonText = "<span style='font-size:14px;'><b>TYPE [[type]]. Count : [[count]]</b>" +
+		subChart.labelText = "Cluster [[type]] : [[percents]]%";
+		subChart.balloonText = "<span style='font-size:14px;'><b>Cluster [[type]]. Count : [[count]]</b>" +
 				"<br>TI : [[ti]] PI : [[pi]] SI : [[si]]<br>TVI : [[tvi]] PVI : [[pvi]] AI : [[ai]]</span>";
 		
 		subChart.invalidateSize();
