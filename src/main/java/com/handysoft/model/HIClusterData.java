@@ -22,7 +22,7 @@ public class HIClusterData {
 	@Id
 	private int day;
 	@Id
-	private char type;
+	private int type;
 	
 	private double ti;
 	private double pi;
@@ -56,11 +56,11 @@ public class HIClusterData {
 		this.day = day;
 	}
 
-	public char getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(char type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 

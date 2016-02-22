@@ -21,22 +21,15 @@ public class HIKmeans {
 		
 		List<HIClusterData> hiClusterData = new ArrayList<>();
 		
-		//set
-		Clusterer clusterer = new KMeans(CLUSTER_SIZE);
-
-		System.out.println(data.size());
-		System.out.println(data.get(0));
-		System.out.println("now clustering");
+		//set ( 5개 클러스터, 기본 100번 반복)
+		Clusterer kMeans = new KMeans(CLUSTER_SIZE);
+		
 		
 		// clustering
-		Dataset[] clusters = clusterer.cluster(data);
+		Dataset[] clusters = kMeans.cluster(data);
 		
-		System.out.println("Clusters size : ");
-		System.out.println(clusters.length);
 		
 		for(Dataset dataset : clusters){
-			
-			
 			
 			hiClusterData
 			.add(
@@ -51,6 +44,7 @@ public class HIKmeans {
 							)
 					);
 		}
+		
 		
 		
 		// Cluster sort
@@ -69,12 +63,10 @@ public class HIKmeans {
 		});
 		
 		
-		
 		// Cluster typing
-		char rank = 'A';
+		int rank = 1;
 		for(HIClusterData h : hiClusterData)
 			h.setType(rank++);
-		
 		
 		
 		

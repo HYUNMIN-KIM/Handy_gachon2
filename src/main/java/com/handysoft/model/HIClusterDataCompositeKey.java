@@ -7,12 +7,12 @@ public class HIClusterDataCompositeKey implements Serializable {
 	private int year;
 	private int month;
 	private int day;
-	private char type;
+	private int type;
 	
-	public char getType() {
+	public int getType() {
 		return type;
 	}
-	public void setType(char type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 	public int getYear() {

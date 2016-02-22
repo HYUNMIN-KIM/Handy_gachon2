@@ -6,7 +6,7 @@ import com.handysoft.model.HIClusterData;
 
 public class GraphJsonHIData {
 	private String date;
-	private char type;
+	private int type;
 	private int ti;
 	private int pi;
 	private int si;
@@ -17,10 +17,10 @@ public class GraphJsonHIData {
 	
 	
 	
-	public char getType() {
+	public int getType() {
 		return type;
 	}
-	public void setType(char type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 	public String getDate() {

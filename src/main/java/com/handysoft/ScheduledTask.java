@@ -39,9 +39,6 @@ public class ScheduledTask {
 	@Scheduled(cron = "0 0 0 * * ?") // 매일 00시
 	public void reportDayKmeans() {
 		try {
-			Dataset data = new DefaultDataset();
-			
-			
 			//어제날짜를 가져옴
 			Calendar c = Calendar.getInstance();
 			int year = c.get(Calendar.YEAR);
@@ -56,22 +53,25 @@ public class ScheduledTask {
 			// 모든 유저의 해당 연월일 센싱 데이터를 가져와
 			// HISensingDataAddInstance를 이용해
 			// instance로 만들어 낸 후 그걸 Dataset에 넣음
-
+			
+			Dataset data = new DefaultDataset();
 			for(UserExtraInfo ux : userExtraInfos){
 				seq = ux.getSeq();
 				List<SIHMSSensingData> sensingDataList 
 					= sensingDataService.findSensorListBySeqAndYearAndMonthAndDay(seq, year, month, day);
 				data.add(HISensingDataAddInstance.run(ux, sensingDataList));
 			}
-			
-			// 위 작업으로 모든 유저의 HI 데이터가 담긴 dataset을 clustering
-			List<HIClusterData> hiClusterData 
-						= HIKmeans.getClusters(data, year, month, day);
-			
-			
-			//DB에 넣음
-			clusterValueService.saveAll(hiClusterData);
-			
+
+			//5개 클러스터이기 때문에 최소 5개
+			if(data.size() > 4){
+				
+				// 위 작업으로 모든 유저의 HI 데이터가 담긴 dataset을 clustering
+				List<HIClusterData> hiClusterData 
+							= HIKmeans.getClusters(data, year, month, day);
+				
+				//DB에 넣음
+				clusterValueService.saveAll(hiClusterData);
+			}
 			
 			System.out.println("Kmeans clustering complete");
 			
