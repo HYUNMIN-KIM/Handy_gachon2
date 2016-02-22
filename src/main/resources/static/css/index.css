@@ -13,9 +13,10 @@
 #clusters{
 	 position: relative;
 	  width: 70%;
-    height: 375px;
+    height: 350px;
     background-color: #FFFFFF;
     margin: 0 auto;
+    margin-top: 30px;
 }
 
 #clusterdiv {
