@@ -37,13 +37,13 @@ public class ScheduledTask {
 
 	@Transactional
 	@Scheduled(cron = "0 0 0 * * ?") // 매일 00시
-	public void reportDayKmeans(int d) {
+	public void reportDayKmeans() {
 		try {
 			//어제날짜를 가져옴
 			Calendar c = Calendar.getInstance();
 			int year = c.get(Calendar.YEAR);
 			int month = c.get(Calendar.MONTH) + 1;
-			int day = c.get(Calendar.DAY_OF_MONTH) - d;
+			int day = c.get(Calendar.DAY_OF_MONTH) - 1;
 			int seq;
 			
 			//모든 유저의 uxInfo를 가져옴
