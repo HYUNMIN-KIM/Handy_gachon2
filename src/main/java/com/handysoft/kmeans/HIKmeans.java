@@ -53,9 +53,9 @@ public class HIKmeans {
 			@Override
 			public int compare(HIClusterData o1, HIClusterData o2) {
 				//XXX hicluster sorting algorithm
-				if(o1.getHi() < o2.getHi())
+				if(o1.getHi() > o2.getHi())
 					return 1;
-				else if(o1.getHi() > o2.getHi())
+				else if(o1.getHi() < o2.getHi())
 					return -1;
 				else
 					return 0;

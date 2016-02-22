@@ -59,21 +59,21 @@ function drawChart() {
 	
 	//clickGraphItem  rollOverGraphItem
 	chart.addListener("rollOverGraphItem", function(event) {
-		clickData = event.item.dataContext;
-		clusterData = clickData.clusterData;
+		overData = event.item.dataContext;
+		clusterData = overData.clusterData;
 		$("#clusterdiv").empty();
-		$("#clusterTitle").text("");
+		$("#clusterTitle").text(overData.date + " cluster detail");
 
-		
-		for(var i=0; i<clusterData.length; i++){
-			clusterData[i].ti = parseFloat(clusterData[i].ti).toFixed(2);
-			clusterData[i].pi = parseFloat(clusterData[i].pi).toFixed(2);
-			clusterData[i].si = parseFloat(clusterData[i].si).toFixed(2);
-			clusterData[i].tvi = parseFloat(clusterData[i].tvi).toFixed(2);
-			clusterData[i].pvi = parseFloat(clusterData[i].pvi).toFixed(2);
-			clusterData[i].ai = parseFloat(clusterData[i].ai).toFixed(2);
-		}		
-
+		if(clusterData.length != null  && typeof clusterData.length != "undefined"){
+			for(var i=0; i<clusterData.length; i++){
+				clusterData[i].ti = parseFloat(clusterData[i].ti).toFixed(2);
+				clusterData[i].pi = parseFloat(clusterData[i].pi).toFixed(2);
+				clusterData[i].si = parseFloat(clusterData[i].si).toFixed(2);
+				clusterData[i].tvi = parseFloat(clusterData[i].tvi).toFixed(2);
+				clusterData[i].pvi = parseFloat(clusterData[i].pvi).toFixed(2);
+				clusterData[i].ai = parseFloat(clusterData[i].ai).toFixed(2);
+			}		
+		}
 		
 		var subChart = new AmCharts.AmPieChart();
 		subChart.valueField = "count";
@@ -86,6 +86,7 @@ function drawChart() {
 				"<br>TI : [[ti]] PI : [[pi]] SI : [[si]]<br>TVI : [[tvi]] PVI : [[pvi]] AI : [[ai]]</span>";
 		
 		subChart.invalidateSize();
+		subChart.startDuration = 0;
 		subChart.write("clusterdiv");
 		
 	});
