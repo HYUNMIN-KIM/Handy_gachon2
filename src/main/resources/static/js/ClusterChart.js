@@ -19,22 +19,25 @@ function drawChart() {
 	valueAxis.axisAlpha = 0;
 	valueAxis.minimum = 0;
 	valueAxis.gridCount = 5;
+	valueAxis.dashLength = 3;
 	valueAxis.showFirstLabel = false;
 	valueAxis.showLastLabel = false;
-	valueAxis.zoomToValues(0, 5);
 	valueAxis.position = "left";
 	chart.addValueAxis(valueAxis);
 
-	var graph_cond = new AmCharts.AmGraph();
-	graph_cond.type = "column";
-	graph_cond.title = "Cluster";
-	graph_cond.lineThickness = 2.0;
-	graph_cond.lineColor = "#85C5E3";
-	graph_cond.valueField = "type";
-	graph_cond.balloonText = "<b><span style='font-size:14px;'>[[type]] Cluster</span></b>";
-	graph_cond.valueAxis = valueAxis;
-	graph_cond.fillAlphas = 0.1;
-	chart.addGraph(graph_cond);
+	var graph_cluster = new AmCharts.AmSerialChart();
+	graph_cluster.type = "column";
+	graph_cluster.title = "Cluster";
+	graph_cluster.bullet = "round";
+	//graph_cluster.dashLength = 1;
+	graph_cluster.lineThickness = 2.0;
+	graph_cluster.lineColor = "#85C5E3";
+	graph_cluster.valueField = "type";
+	graph_cluster.balloonText = "<span style='font-size:14px;'><b>[[type]] Cluster</b>" +
+			"<br>TI : [[ti]] PI : [[pi]] SI : [[si]]<br>TVI : [[tvi]] PVI : [[pvi]] AI : [[ai]]</span>";
+	graph_cluster.valueAxis = valueAxis;
+	graph_cluster.fillAlphas = 0.1;
+	chart.addGraph(graph_cluster);
 	
 	// categoryAxis
 	var categoryAxis = chart.categoryAxis;
@@ -58,7 +61,7 @@ function drawChart() {
 	
 	
 	//clickGraphItem  rollOverGraphItem
-	chart.addListener("rollOverGraphItem", function(event) {
+	graph_cluster.addListener("rollOverGraphItem", function(event) {
 		overData = event.item.dataContext;
 		clusterData = overData.clusterData;
 		$("#clusterdiv").empty();
