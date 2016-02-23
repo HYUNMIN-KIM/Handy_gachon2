@@ -19,8 +19,8 @@ apply plugin: 'war'
 
 
 war {
-	baseName = 'gachon'
-	version = '0.0.1-SNAPSHOT'
+	baseName = 'handy_gachon_project'
+	version = '0.1'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -31,6 +31,7 @@ repositories {
 
 
 dependencies {
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	compile('org.projectlombok:lombok:1.16.6')
