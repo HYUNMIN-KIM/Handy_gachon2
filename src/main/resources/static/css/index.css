@@ -2,6 +2,24 @@
 
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
+#idTable{
+	position: relative;
+	width: 70%;
+	margin: 0 auto;
+}
+
+#idTable table{
+	font-size:12pt;
+    margin: 0 auto;
+}
+
+#idTable table td{
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
 #chartdiv {
 	position: relative;
 	width: 70%;

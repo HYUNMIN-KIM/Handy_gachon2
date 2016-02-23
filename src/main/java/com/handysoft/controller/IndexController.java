@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class IndexController {
 
 	@RequestMapping("/")
-	public String index(@RequestParam(value = "userid", required = true) String userid, Model model){
+	public String index(Model model){
+		return "index";
+	}
+	
+	@RequestMapping("/condition")
+	public String conditionIndex(@RequestParam(value = "userid", required = true) String userid, Model model){
 		model.addAttribute("userid", userid);
 		return "ConditionGraph";
 	}
