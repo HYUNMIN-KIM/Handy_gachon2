@@ -20,6 +20,7 @@ function drawChart() {
 	valueAxis.minimum = 0;
 	valueAxis.gridCount = 5;
 	valueAxis.dashLength = 3;
+	valueAxis.zoomToValues(0, 6);
 	valueAxis.showFirstLabel = false;
 	valueAxis.showLastLabel = false;
 	valueAxis.position = "left";
@@ -34,7 +35,7 @@ function drawChart() {
 	graph_cluster.lineColor = "#85C5E3";
 	graph_cluster.valueField = "type";
 	graph_cluster.balloonText = "<span style='font-size:14px;'><b>[[type]] Cluster</b>" +
-			"<br>TI : [[ti]] PI : [[pi]] SI : [[si]]<br>TVI : [[tvi]] PVI : [[pvi]] AI : [[ai]]</span>";
+			"<br>TI : [[ti]], PI : [[pi]], SI : [[si]]<br>TVI : [[tvi]], PVI : [[pvi]], AI : [[ai]]</span>";
 	graph_cluster.valueAxis = valueAxis;
 	graph_cluster.fillAlphas = 0.1;
 	chart.addGraph(graph_cluster);
@@ -86,7 +87,7 @@ function drawChart() {
 		
 		subChart.labelText = "Cluster [[type]] : [[percents]]%";
 		subChart.balloonText = "<span style='font-size:14px;'><b>Cluster [[type]]. Count : [[count]]</b>" +
-				"<br>TI : [[ti]] PI : [[pi]] SI : [[si]]<br>TVI : [[tvi]] PVI : [[pvi]] AI : [[ai]]</span>";
+				"<br>TI : [[ti]], PI : [[pi]], SI : [[si]]<br>TVI : [[tvi]], PVI : [[pvi]], AI : [[ai]]</span>";
 		
 		subChart.invalidateSize();
 		subChart.startDuration = 0;
